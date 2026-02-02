@@ -336,7 +336,4 @@ app.get('/logout', (req, res) => {
     res.json({ message: "Déconnecté" });
 });
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-    console.log(`🚀 Serveur stable sur http://localhost:${PORT}`);
-});
+module.exports = app;
