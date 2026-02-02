@@ -71,7 +71,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // --- 3. ROUTE INSCRIPTION ---
-app.post('/register', async (req, res) => {
+app.post('/api/register', async (req, res) => {
     const { firstname, lastname, email, password } = req.body;
     if (!email || !password) return res.status(400).json({ error: "Données manquantes" });
 
@@ -110,7 +110,7 @@ app.post('/register', async (req, res) => {
 });
 
 // --- 4. ROUTE VÉRIFICATION (Correction 400 Bad Request) ---
-app.post('/verify', (req, res) => {
+app.post('/api/verify', (req, res) => {
     const { email, code } = req.body;
 
     if (!email || !code) {
@@ -149,7 +149,7 @@ app.post('/verify', (req, res) => {
 });
 
 // --- 5. AUTH GOOGLE ---
-app.post('/auth/google', async (req, res) => {
+app.post('/api/auth/google', async (req, res) => {
     const { idToken } = req.body;
     if (!idToken) return res.status(400).json({ error: "idToken manquant" });
 
@@ -184,7 +184,7 @@ app.post('/auth/google', async (req, res) => {
 });
 
 // --- ROUTE CONNEXION ---
-app.post('/login', (req, res) => {
+app.post('/api/login', (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -246,7 +246,7 @@ app.post('/login', (req, res) => {
 });
 
 // --- ROUTE MOT DE PASSE OUBLIÉ ---
-app.post('/forgot-password', (req, res) => {
+app.post('/api/forgot-password', (req, res) => {
     const { email } = req.body;
     const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -279,7 +279,7 @@ app.post('/forgot-password', (req, res) => {
 
 // route pour mettre a jour le mot de passe
 
-app.post('/update-password', async (req, res) => {
+app.post('/api/update-password', async (req, res) => {
     const { email, newPassword } = req.body;
 
     if (!email || !newPassword) {
@@ -314,7 +314,7 @@ app.post('/update-password', async (req, res) => {
 
 //route pour verifié que la personne est connecté
 
-app.get('/me', (req, res) => {
+app.get('/api/me', (req, res) => {
     const token = req.cookies.token; // On récupère le badge dans le cookie
 
     if (!token) {
@@ -331,7 +331,7 @@ app.get('/me', (req, res) => {
     });
 });
 
-app.get('/logout', (req, res) => {
+app.get('/api/logout', (req, res) => {
     res.clearCookie('token');
     res.json({ message: "Déconnecté" });
 });
