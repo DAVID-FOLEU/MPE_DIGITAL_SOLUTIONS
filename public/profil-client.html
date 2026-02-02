@@ -181,12 +181,12 @@ function updateGreeting() {
     
     // Ton code pour les initiales et l'avatar
     const initials = (lastName.charAt(0) + firstName.charAt(0)).toUpperCase();
-    const avatarImg = document.querySelector('.cursor-pointer img');
-    if (avatarImg) {
-        avatarImg.src = `https://ui-avatars.com/api/?name=${initials}&background=2c64e3&color=fff&bold=true`;
-        avatarImg.alt = initials;
-    }
+    const avatarImages = document.querySelectorAll('.cursor-pointer img');
 
+avatarImages.forEach(img => {
+    img.src = `https://ui-avatars.com/api/?name=${initials}&background=2c64e3&color=fff&bold=true`;
+    img.alt = initials;
+});
     // Ton code pour le message horaire
     let message = "";
     let icon = "";
@@ -231,7 +231,7 @@ function updateGreeting() {
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.5rem;">3</span>
         </div>
         <div class="dropdown">
-            <div class="d-flex align-items-center gap-2" data-bs-toggle="dropdown">
+            <div class="d-flex align-items-center cursor-pointer gap-2" data-bs-toggle="dropdown">
                 <!-- <span class="fw-bold text-white d-md-none text-center d-flex align-items-center rounded-circle border border-primary bg-primary small" style="width:30px; height:30px">JD</span> -->
                 <img src="https://ui-avatars.com/api/?name=JD&background=2c64e3&color=fff" class="rounded-circle border border-primary" width="30">
             </div>
