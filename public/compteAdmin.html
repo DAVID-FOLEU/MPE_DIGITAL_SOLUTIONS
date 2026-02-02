@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr" data-bs-theme="dark" id="mainHtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | MPE Digital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+            --primary: #2c64e3;
+            --bg-gradient: radial-gradient(circle at top right, #1a1a1a, #0d1117 80%);
+        }
+
+        body { background: var(--bg-gradient); min-height: 100vh; transition: 0.4s; color: white; }
+
+        /* Sidebar & Layout */
+        .sidebar {
+            background: rgba(13, 17, 23, 0.95); backdrop-filter: blur(15px);
+            border-right: 1px solid var(--border); z-index: 2000; transition: 0.3s;
+        }
+        .main-content { padding-top: 20px; }
+        .nav-link { color: rgba(255,255,255,0.6); cursor: pointer; border-radius: 10px; margin-bottom: 5px; transition: 0.3s; }
+        .nav-link.active { background: var(--primary) !important; color: white !important; }
+        .nav-link:hover:not(.active) { background: rgba(44, 100, 227, 0.1); color: white; }
+
+        /* Elements */
+        .stat-card { background: var(--glass); border: 1px solid var(--border); border-radius: 16px; padding: 20px; transition: 0.3s; }
+        .content-section { display: none; }
+        .content-section.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Messagerie Admin */
+        .contact-item { cursor: pointer; transition: 0.2s; border-bottom: 1px solid var(--border); }
+        .contact-item:hover { background: rgba(255,255,255,0.05); }
+        .chat-box { height: 60vh; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 12px; padding: 15px; display: flex; flex-direction: column; }
+        .msg { margin-bottom: 15px; padding: 10px 15px; border-radius: 15px; max-width: 80%; font-size: 0.9rem; }
+        .msg-in { background: var(--border); align-self: flex-start; }
+        .msg-out { background: var(--primary); color: white; align-self: flex-end; }
+        
+        .cursor-pointer { cursor: pointer; }
+        [data-bs-theme="light"] { 
+            --glass: rgba(0, 0, 0, 0.03); --border: rgba(0, 0, 0, 0.1); 
+            --bg-gradient: radial-gradient(circle at top right, #f8f9fa, #e9ecef 80%);
+        }
+        [data-bs-theme="light"] body { color: #333; }
+        [data-bs-theme="light"] .sidebar { background: white; }
+        [data-bs-theme="light"] .nav-link { color: #555; }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-3 col-lg-2 sidebar vh-100 position-fixed p-3 d-flex flex-column" id="sidebarMenu">
+            <div class="mb-4 text-center">
+                <h4 class="text-primary fw-bold">MPE ADMIN</h4>
+            </div>
+            <ul class="nav flex-column gap-1">
+                <li class="nav-item"><a class="nav-link active" onclick="switchTab('tab-dash', this)"><i class="bi bi-grid-1x2-fill me-2"></i> Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="switchTab('tab-devis', this)"><i class="bi bi-file-earmark-text me-2"></i> Tous les Devis</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="switchTab('tab-team', this)"><i class="bi bi-people me-2"></i> Équipe</a></li>
+                <li class="nav-item"><a class="nav-link position-relative" onclick="switchTab('tab-chat', this)">
+                    <i class="bi bi-chat-dots me-2"></i> Messages
+                    <span id="globalMsgBadge" class="position-absolute badge rounded-pill bg-danger" style="font-size: 0.6rem; top:0; right:0;">2</span>
+                </a></li>
+            </ul>
+            <div class="mt-auto pt-3 border-top border-secondary text-center">
+                <button class="btn btn-sm btn-outline-secondary w-100 mb-2" onclick="toggleTheme()"><i class="bi bi-moon-stars"></i> Mode</button>
+                <p class="text-white-50 small">© 2026 Admin Portal</p>
+            </div>
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 offset-md-3 offset-lg-2 main-content">
+            
+            <header class="d-flex justify-content-between align-items-center pb-3 mb-4 border-bottom border-secondary">
+                <h2 id="welcome-message" class="fw-bold mb-0 text-primary">Tableau de Bord</h2>
+                <div class="dropdown">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=2c64e3&color=fff" class="rounded-circle border border-primary cursor-pointer" width="40" data-bs-toggle="dropdown">
+                    <ul class="dropdown-menu dropdown-menu-end shadow">
+                        <li><a class="dropdown-item" href="#">Profil Admin</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#">Déconnexion</a></li>
+                    </ul>
+                </div>
+            </header>
+
+            <section id="tab-dash" class="content-section active">
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4"><div class="stat-card"><h6>Projets Actifs</h6><h2 class="text-primary">24</h2></div></div>
+                    <div class="col-md-4"><div class="stat-card"><h6>Devis Signés</h6><h2 class="text-success">128</h2></div></div>
+                    <div class="col-md-4"><div class="stat-card"><h6>CA Mensuel</h6><h2 class="text-warning">14,250€</h2></div></div>
+                </div>
+                <div class="card bg-transparent border-secondary p-4 rounded-4">
+                    <h5>Derniers Projets Plateforme</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover mt-3">
+                            <tbody id="adminProjectList"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-devis" class="content-section">
+                <div class="card bg-transparent border-secondary p-4 rounded-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4>Gestion des Devis</h4>
+                        <input type="text" class="form-control bg-dark border-secondary text-white w-25" placeholder="Rechercher..." onkeyup="searchTable(this, 'devisList')">
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead><tr class="text-white-50"><th>Réf</th><th>Client</th><th>Montant</th><th>Statut</th><th class="text-end">Actions</th></tr></thead>
+                            <tbody id="devisList"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-team" class="content-section">
+                <div class="card bg-transparent border-secondary p-4 rounded-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4>Membres de l'Équipe</h4>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addAgentModal">+ Ajouter</button>
+                    </div>
+                    <div id="agentList" class="row g-3"></div>
+                </div>
+            </section>
+
+            <section id="tab-chat" class="content-section">
+                <div class="card bg-transparent border-secondary rounded-4 overflow-hidden">
+                    <div class="row g-0" style="height: 70vh;">
+                        <div class="col-md-4 border-end border-secondary overflow-auto" id="contactList"></div>
+                        <div class="col-md-8 d-flex flex-column">
+                            <div id="chatHeader" class="p-3 border-bottom border-secondary d-none">
+                                <h6 class="mb-0 fw-bold" id="activeContactName">Chat</h6>
+                            </div>
+                            <div class="chat-box flex-grow-1" id="chatMessages">
+                                <div class="m-auto text-white-50">Sélectionnez une conversation</div>
+                            </div>
+                            <div class="p-3 border-top border-secondary d-none" id="chatInputArea">
+                                <div class="input-group">
+                                    <input type="text" id="msgInput" class="form-control bg-dark border-secondary text-white" placeholder="Votre réponse...">
+                                    <button class="btn btn-primary" onclick="sendMessage()"><i class="bi bi-send"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+</div>
+
+<div class="modal fade" id="addAgentModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark border-secondary shadow-lg text-white">
+            <div class="modal-header border-secondary"><h5 class="modal-title">Nouvel Agent</h5><button class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <div class="mb-3"><label class="small text-white-50">Nom</label><input type="text" id="newAgentName" class="form-control bg-transparent border-secondary text-white"></div>
+                <div class="mb-3"><label class="small text-white-50">Rôle</label><input type="text" id="newAgentRole" class="form-control bg-transparent border-secondary text-white"></div>
+                <button class="btn btn-primary w-100" onclick="addAgent()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // --- DONNEES ---
+    let team = [
+        { id: 1, name: "Alice Martin", role: "Designer" },
+        { id: 2, name: "Marc Tamo", role: "Développeur" }
+    ];
+
+    let devis = [
+        { id: 1, ref: "DEV-001", client: "Société Alpha", montant: "1,200€", status: "En attente" },
+        { id: 2, ref: "DEV-002", client: "Garage X", montant: "850€", status: "Signé" }
+    ];
+
+    const conversations = [
+        { name: "Jean Dupont", last: "Bonjour, j'ai une question.", avatar: "JD" },
+        { name: "Marie Loe", last: "Le devis est validé !", avatar: "ML" }
+    ];
+
+    // --- LOGIQUE CORE ---
+    function switchTab(tabId, el) {
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        if(el) el.classList.add('active');
+    }
+
+    // --- GESTION DEVIS (ADMIN) ---
+    function renderDevis() {
+        const list = document.getElementById('devisList');
+        list.innerHTML = devis.map(d => `
+            <tr>
+                <td class="fw-bold">${d.ref}</td>
+                <td>${d.client}</td>
+                <td>${d.montant}</td>
+                <td>
+                    <select class="form-select form-select-sm bg-dark text-white border-secondary w-auto" onchange="updateStatus(${d.id}, this.value)">
+                        <option ${d.status === 'En attente' ? 'selected' : ''}>En attente</option>
+                        <option ${d.status === 'Signé' ? 'selected' : ''}>Signé</option>
+                        <option ${d.status === 'Payé' ? 'selected' : ''}>Payé</option>
+                    </select>
+                </td>
+                <td class="text-end"><button class="btn btn-sm btn-outline-danger" onclick="deleteDevis(${d.id})"><i class="bi bi-trash"></i></button></td>
+            </tr>
+        `).join('');
+    }
+
+    function updateStatus(id, val) {
+        const d = devis.find(x => x.id === id);
+        if(d) d.status = val;
+        alert(`Statut mis à jour : ${val}`);
+    }
+
+    function deleteDevis(id) {
+        if(confirm("Supprimer ce devis ?")) {
+            devis = devis.filter(x => x.id !== id);
+            renderDevis();
+        }
+    }
+
+    // --- GESTION EQUIPE ---
+    function renderTeam() {
+        const container = document.getElementById('agentList');
+        container.innerHTML = team.map(a => `
+            <div class="col-md-6">
+                <div class="stat-card d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="https://ui-avatars.com/api/?name=${a.name}&background=random" class="rounded-circle" width="40">
+                        <div><h6 class="mb-0">${a.name}</h6><small class="text-white-50">${a.role}</small></div>
+                    </div>
+                    <button class="btn btn-sm text-danger" onclick="removeAgent(${a.id})"><i class="bi bi-x-circle"></i></button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function addAgent() {
+        const name = document.getElementById('newAgentName').value;
+        const role = document.getElementById('newAgentRole').value;
+        if(name && role) {
+            team.push({ id: Date.now(), name, role });
+            renderTeam();
+            bootstrap.Modal.getInstance(document.getElementById('addAgentModal')).hide();
+        }
+    }
+
+    function removeAgent(id) {
+        team = team.filter(a => a.id !== id);
+        renderTeam();
+    }
+
+    // --- MESSAGERIE ---
+    function renderContacts() {
+        const list = document.getElementById('contactList');
+        list.innerHTML = conversations.map(c => `
+            <div class="contact-item p-3" onclick="openChat('${c.name}')">
+                <div class="d-flex align-items-center gap-3">
+                    <img src="https://ui-avatars.com/api/?name=${c.avatar}&background=2c64e3&color=fff" class="rounded-circle" width="40">
+                    <div class="overflow-hidden">
+                        <h6 class="mb-0 small fw-bold">${c.name}</h6>
+                        <div class="small text-white-50 text-truncate">${c.last}</div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function openChat(name) {
+        document.getElementById('chatHeader').classList.remove('d-none');
+        document.getElementById('chatInputArea').classList.remove('d-none');
+        document.getElementById('activeContactName').innerText = name;
+        document.getElementById('chatMessages').innerHTML = `
+            <div class="msg msg-in">Bonjour Admin, mon projet avance ?</div>
+            <div class="msg msg-out">Bonjour ${name}, oui ! On finit la maquette demain.</div>
+        `;
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('msgInput');
+        if(!input.value) return;
+        const chat = document.getElementById('chatMessages');
+        chat.innerHTML += `<div class="msg msg-out">${input.value}</div>`;
+        input.value = "";
+        chat.scrollTop = chat.scrollHeight;
+    }
+
+    // --- UTILITAIRES ---
+    function searchTable(input, tableId) {
+        let filter = input.value.toLowerCase();
+        let rows = document.getElementById(tableId).getElementsByTagName("tr");
+        for (let row of rows) {
+            row.style.display = row.textContent.toLowerCase().includes(filter) ? "" : "none";
+        }
+    }
+
+    function toggleTheme() {
+        const html = document.getElementById('mainHtml');
+        const current = html.getAttribute('data-bs-theme');
+        html.setAttribute('data-bs-theme', current === 'dark' ? 'light' : 'dark');
+    }
+
+    function updateGreeting() {
+        const hr = new Date().getHours();
+        const msg = hr < 12 ? "Bonjour" : (hr < 18 ? "Bon après-midi" : "Bonsoir");
+        document.getElementById('welcome-message').innerHTML = `<i class="bi bi-shield-check me-2"></i> ${msg}, <span class="text-primary">Admin</span>`;
+    }
+
+    window.onload = () => {
+        renderDevis();
+        renderTeam();
+        renderContacts();
+        updateGreeting();
+    };
+</script>
+</body>
+</html>

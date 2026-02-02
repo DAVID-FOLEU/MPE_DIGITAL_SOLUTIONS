@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="fr" data-bs-theme="dark" id="mainHtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/logo.avif" sizes="any">
+    <link rel="icon" href="images/logo.avif"  sizes="16x16">
+    <link rel="icon" href="images/logo.avif" sizes="32x32">
+    <title>Mon compte | MPE Digital</title>
+    <meta name="description" content="Nous créons des sites web, applications mobiles et expériences digitales exceptionnelles qui génèrent des résultats.">
+    <meta name="author" content="MPE Digital Solutions">
+    <meta name="keywords" content="web development,mobile app development,digital marketing,SEO services,e-commerce solutions,UI/UX design,web design,digital agency,website development,online marketing">
+    <meta name="creator" content="MPE Digital Solutions">
+    <meta name="publisher" content="MPE DIGITAL SOLUTIONS">
+   <script src="https://unpkg.com/scrollreveal"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+             --glass: rgba(255, 255, 255, 0.03);
+             --border: rgba(255, 255, 255, 0.1);
+             --primary: #2c64e3;
+             --bg-gradient: radial-gradient(circle at top right, #1a1a1a, #0d1117 80%);
+         }
+      /* Styles spécifiques au mode CLAIR (Light Mode) */
+            [data-bs-theme="light"] { 
+                --glass: rgba(0, 0, 0, 0.03); 
+                --border: rgba(0, 0, 0, 0.1); 
+                --bg-gradient: radial-gradient(circle at top right, #f8f9fa, #e9ecef 80%);
+            }
+
+        /* body { 
+            background: radial-gradient(circle at top right, #1a1a1a, #0d1117 80%); 
+            min-height: 100vh;
+            transition: all 0.4s ease;
+        } */
+
+
+
+        body { 
+            background: var(--bg-gradient); 
+            min-height: 100vh;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+            /* Sidebar adaptative */
+[data-bs-theme="light"] .sidebar, 
+[data-bs-theme="light"] .mobile-top-bar {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Textes de la Sidebar en mode clair */
+[data-bs-theme="light"] .nav-link { color: #444; }
+[data-bs-theme="light"] .nav-link:hover:not(.active) { background: rgba(44, 100, 227, 0.1); color: var(--primary); }
+[data-bs-theme="light"] .text-white-50 { color: rgba(0, 0, 0, 0.5) !important; }
+[data-bs-theme="light"] .text-white { color: #000 !important; }
+
+/* Tableaux adaptatifs */
+[data-bs-theme="light"] .table { --bs-table-bg: transparent; --bs-table-color: #333; }
+[data-bs-theme="light"] .card { background: white !important; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+
+/* Dropdown menu */
+[data-bs-theme="light"] .dropdown-menu { background: white; border: 1px solid #ddd; }
+[data-bs-theme="light"] .dropdown-item { color: #333; }
+
+
+        .sidebar-logo { height: auto; width: 150px; transition: transform 0.3s; }
+        .logo-mobile { height: auto; width: 80px; }
+
+        .sidebar {
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(15px);
+            border-right: 1px solid var(--border);
+            z-index: 2000;
+            transition: transform 0.3s ease;
+        }
+
+        @media (max-width: 767.98px){
+            .sidebar { position: fixed; left: 0; top: 0; width: 280px; height: 100vh; transform: translateX(-100%); }
+            .sidebar.show { transform: translateX(0); }
+            .main-content { margin-left: 0 !important; padding-top: 80px; }
+            .mobile-top-bar { display: flex !important; }
+        }
+
+        .mobile-top-bar {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 65px;
+            background: rgba(13, 17, 23, 0.8); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); z-index: 1500; padding: 0 15px;
+        }
+
+        .sidebar-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 1999;
+        }
+        .sidebar-overlay.show { display: block; }
+
+        .nav-link {
+            color: rgba(255,255,255,0.6); padding: 6px 10px; border-radius: 10px;
+            margin-bottom: 5px; cursor: pointer; transition: 0.3s;
+        }
+        .nav-link.active { background: var(--primary) !important; color: white !important; }
+        .nav-link:hover:not(.active) { background: rgba(44, 100, 227, 0.1); color: white; }
+
+        .stat-card {
+            background: var(--glass); border: 1px solid var(--border);
+            border-radius: 16px; padding: 20px; cursor: pointer; transition: 0.3s;
+        }
+        .stat-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+
+        .content-section { display: none; }
+        .content-section.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .chat-box { height: 60vh; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 12px; padding: 15px; }
+        .msg { margin-bottom: 15px; padding: 10px 15px; border-radius: 15px; max-width: 80%; }
+        .msg-in { background: var(--border); align-self: flex-start; }
+        .msg-out { background: var(--primary); color: white; margin-left: auto; }
+        
+        .dropdown-menu { background: #1a1d21; border: 1px solid var(--border); }
+        .dropdown-item { color: white; opacity: 0.8; }
+        .dropdown-item:hover { background: var(--primary); opacity: 1; }
+        .deconnexion:hover{
+            color:white !important;
+            background: red !important;
+        }
+
+       /* --- Style de base du Modal (Verre) --- */
+.adaptive-modal {
+    backdrop-filter: blur(20px);
+    transition: all 0.4s ease;
+}
+
+/* --- Mode SOMBRE (Dark) --- */
+[data-bs-theme="dark"] .adaptive-modal {
+    background: rgba(20, 24, 31, 0.95);
+}
+[data-bs-theme="dark"] .adaptive-text { color: white; }
+[data-bs-theme="dark"] .adaptive-text-muted { color: rgba(255, 255, 255, 0.5); }
+[data-bs-theme="dark"] .adaptive-close { filter: invert(1); } /* X blanc */
+
+/* --- Mode CLAIR (Light) --- */
+[data-bs-theme="light"] .adaptive-modal {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+[data-bs-theme="light"] .adaptive-text { color: #1a1d21; }
+[data-bs-theme="light"] .adaptive-text-muted { color: rgba(0, 0, 0, 0.6); }
+[data-bs-theme="light"] .adaptive-close { filter: none; } /* X noir */
+
+/* Effet au survol des notifications en mode clair */
+[data-bs-theme="light"] .list-group-item-action:hover {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+    </style>
+
+<script>
+
+function updateGreeting() {
+    const greetingElement = document.getElementById('welcome-message');
+    const hour = new Date().getHours();
+    const userData = localStorage.getItem('user');
+    const user = JSON.parse(userData);
+    const firstName = user.firstname || "";
+    const lastName = user.lastname || "";
+        
+        // On récupère les initiales (ex: "John Doe" -> "JD")
+        const initials = (lastName.charAt(0) + firstName.charAt(0)).toUpperCase();
+        
+        // 1. Mise à jour de l'image (Avatar dynamique)
+        const avatarImg = document.querySelector('.cursor-pointer img');
+        if (avatarImg) {
+            avatarImg.src = `https://ui-avatars.com/api/?name=${initials}&background=2c64e3&color=fff&bold=true`;
+            avatarImg.alt = initials;
+        }
+    
+    let message = "";
+    let icon = "";
+
+    if (hour >= 5 && hour < 12) {
+        message = "Bonjour";
+        icon = '<i class="bi bi-brightness-high text-warning me-2"></i>';
+    } else if (hour >= 12 && hour < 18) {
+        message = "Bon après-midi"
+    icon = '<i class="bi bi-sun-fill text-warning me-2"></i>';
+    } else {
+        message = "Bonsoir";
+        icon = '<i class="bi bi-moon-stars-fill text-primary me-2"></i>';
+    }
+
+    // Injection du message embelli
+    greetingElement.innerHTML = `${icon}${message}, <span class="text-primary">${firstName}</span>`;
+}
+
+
+</script>
+</head>
+
+<body>
+
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<div class="mobile-top-bar align-items-center justify-content-between">
+    <div class="d-flex align-items-center gap-3">
+        <button class="btn text-white p-0" onclick="toggleSidebar()">
+            <i class="bi bi-list fs-2"></i>
+        </button>
+        <a href="index.html" class="text-white text-decoration-none d-flex align-items-center gap-2">
+            <i class="bi bi-house-door fs-4"></i>
+            <span class="small">Accueil</span>
+        </a>
+    </div>
+    
+    <div class="d-flex align-items-center gap-3">
+        <div class="position-relative" data-bs-toggle="modal" data-bs-target="#notificationModal">
+            <i class="bi bi-bell fs-4 text-white"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.5rem;">3</span>
+        </div>
+        <div class="dropdown">
+            <div class="d-flex align-items-center gap-2" data-bs-toggle="dropdown">
+                <!-- <span class="fw-bold text-white d-md-none text-center d-flex align-items-center rounded-circle border border-primary bg-primary small" style="width:30px; height:30px">JD</span> -->
+                <img src="https://ui-avatars.com/api/?name=JD&background=2c64e3&color=fff" class="rounded-circle border border-primary" width="30">
+            </div>
+            <ul class="dropdown-menu dropdown-menu-end shadow">
+                <li><a class="dropdown-item" onclick="switchTab('tab-profile')"><i class="bi bi-person me-2"></i>Profil</a></li>
+                <li><a class="dropdown-item" href="#"><i class="bi bi-translate me-2"></i>Langue</a></li>
+                <li><a class="dropdown-item" onclick="toggleTheme()"><i class="bi bi-moon-stars me-2"></i>Thème</a></li>
+                <li><hr class="dropdown-divider border-secondary"></li>
+                <li><a class="dropdown-item deconnexion text-danger" id="logoutBtn"><i class="bi bi-box-arrow-left me-2"></i>Déconnexion</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-3 col-lg-2 sidebar vh-100 position-fixed p-3 d-flex flex-column" id="sidebarMenu">
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn text-white p-0" onclick="toggleSidebar()">
+                    <i class="bi bi-list fs-2"></i>
+                </button>
+                <a href="index.html" class="text-white text-decoration-none d-flex align-items-center gap-2">
+                    <i class="bi bi-house-door fs-4"></i>
+                    <span class="small">Accueil</span>
+                </a>
+            </div>
+            <div class="mb-4 text-center">
+                <img src="images/logo.avif"  alt="MPE" class="sidebar-logo mb-2">
+                <!-- <h6 class="text-primary fw-bold small">MPE DIGITAL</h6> -->
+            </div>
+            
+            <ul class="nav flex-column gap-1">
+                <li class="nav-item"><a class="nav-link active" onclick="switchTab('tab-dash', this)"><i class="bi bi-grid-1x2-fill me-2"></i> Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="switchTab('tab-devis', this)"><i class="bi bi-file-earmark-plus me-2"></i> Mes Devis</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="switchTab('tab-docs', this)"><i class="bi bi-folder-check me-2"></i> Documents</a></li>
+                <li class="nav-item"><a class="nav-link position-relative" onclick="switchTab('tab-chat', this)">
+                    <i class="bi bi-chat-dots me-2"></i> Messagerie
+                    <span class="position-absolute badge rounded-pill bg-danger" style="font-size: 0.7rem; top:-3px; right:-3px;">3</span>
+                </a></li>
+            </ul>
+            <div class="mt-auto pt-3 border-top border-secondary text-center">
+                <p class="text-white-50 small mb-0">© 2026 MPE Digital</p>
+            </div>
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 offset-md-3 offset-lg-2 main-content">
+            <div class="d-none d-md-flex justify-content-between align-items-center pt-2 pb-2 mb-1 border-bottom border-secondary">
+                <div class="d-none d-md-flex justify-content-between align-items-center pt-3 pb-3 mb-0">
+                    <div>
+                        <h2 class="fw-bold mb-0" id="welcome-message">Espace Client</h2>
+                        <p class="text-white-50 small mb-0">Ravi de vous revoir dans votre tableau de bord.</p>
+                    </div>
+                </div>
+                         <div class="d-flex align-items-center gap-4">
+                            <div class="position-relative cursor-pointer" data-bs-toggle="modal" data-bs-target="#notificationModal">
+                                <i class="bi bi-bell fs-4 text-white-50"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">3</span>
+                            </div>
+                    <div class="dropdown">
+                        <div class="d-flex align-items-center gap-2 cursor-pointer" data-bs-toggle="dropdown">
+                            <!-- <span class="fw-bold text-primary">JD</span> -->
+                            <img src="https://ui-avatars.com/api/?name=JD&background=2c64e3&color=fff" class="rounded-circle border border-primary p-1" width="40">
+                        </div>
+                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                            <li><a class="dropdown-item" onclick="switchTab('tab-profile')"><i class="bi bi-person me-2"></i>Profil</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-translate me-2"></i>Langue</a></li>
+                            <li><a class="dropdown-item" onclick="toggleTheme()"><i class="bi bi-moon-stars me-2"></i>Thème</a></li>
+                            <li><hr class="dropdown-divider border-secondary"></li>
+                            <li><a class="dropdown-item deconnexion text-danger fw-bold" onclick="logout()"><i class="bi bi-box-arrow-left me-2"></i>Déconnexion</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <section id="tab-dash" class="content-section active py-3">
+                <div class="row g-4 mb-5">
+                    <div class="col-md-4" onclick="filterProjects('attente')"><div class="stat-card"><h6 class="text-white-50">En attente</h6><h2 class="fw-bold text-warning">03</h2></div></div>
+                    <div class="col-md-4" onclick="filterProjects('cours')"><div class="stat-card"><h6 class="text-white-50">En cours</h6><h2 class="fw-bold text-primary">02</h2></div></div>
+                    <div class="col-md-4" onclick="filterProjects('termine')"><div class="stat-card"><h6 class="text-white-50">Terminés</h6><h2 class="fw-bold text-success">12</h2></div></div>
+                </div>
+                <div class="card bg-transparent border-secondary p-4 rounded-4">
+                    <h5 id="projectTitle">Tous les projets</h5>
+                    <div class="table-responsive"><table class="table  table-hover mt-3"><tbody id="projectList"></tbody></table></div>
+                </div>
+            </section>
+
+            <section id="tab-devis" class="content-section py-3">
+                <div class="card bg-transparent border-secondary p-0 rounded-4">
+                    <div class="d-flex justify-content-between p-3 align-items-center mb-4">
+                        <h4>Mes Devis</h4>
+                        <span class="badge bg-primary">Trié par date</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table  table-hover align-middle">
+                            <thead><tr class="text-white-50"><th>Référence</th><th>Date</th><th>Montant</th><th>Statut</th><th class="text-end">Action</th></tr></thead>
+                            <tbody id="devisList"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-chat" class="content-section py-1">
+                <div class="card bg-transparent border-secondary p-4 rounded-4">
+                    <h4 class="mb-4">Messagerie</h4>
+                    <div class="chat-box d-flex flex-column mb-3" id="chatMessages">
+                        <div class="msg msg-in">Bonjour Jean ! Comment pouvons-nous vous aider ?</div>
+                        <div class="msg msg-out">Bonjour, je souhaiterais modifier mon devis actuel.</div>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-dark border-secondary text-white" placeholder="Message...">
+                        <button class="btn btn-primary"><i class="bi bi-send"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-docs" class="content-section py-3">
+                <div class="card bg-transparent border-secondary p-1 rounded-4">
+                    <h4 class="mb-4">Mes Documents</h4>
+                    <div class="table-responsive">
+                        <table class="table  table-hover align-middle">
+                            <thead>
+                                <tr class="text-white-50">
+                                    <th>Nom du fichier</th>
+                                    <th>Taille</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><i class="bi bi-file-earmark-pdf text-danger me-2"></i> Facture_Janvier_2026.pdf</td>
+                                    <td>1.2 MB</td>
+                                    <td class="text-end"><a href="#" class="btn btn-sm btn-primary"><i class="bi bi-download"></i></a></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="bi bi-file-earmark-text text-primary me-2"></i> Cahier_des_charges.docx</td>
+                                    <td>2.5 MB</td>
+                                    <td class="text-end"><a href="#" class="btn btn-sm btn-primary"><i class="bi bi-download"></i></a></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="bi bi-file-earmark-image text-success me-2"></i> Maquette_v1.png</td>
+                                    <td>5.8 MB</td>
+                                    <td class="text-end"><a href="#" class="btn btn-sm btn-primary"><i class="bi bi-download"></i></a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+         
+            <section class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content adaptive-modal border-secondary shadow-lg">
+                        <div class="modal-header border-secondary">
+                            <h5 class="modal-title adaptive-text"><i class="bi bi-bell-fill me-2 text-primary"></i>Notifications</h5>
+                            <button type="button" class="btn-close adaptive-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-0">
+                            <div class="list-group list-group-flush">
+                                <a href="#" class="list-group-item list-group-item-action bg-transparent border-secondary py-3 px-4">
+                                    <div class="d-flex w-100 justify-content-between align-items-center">
+                                        <h6 class="mb-1 adaptive-text fw-bold">Nouveau Devis disponible</h6>
+                                        <small class="text-primary">À l'instant</small>
+                                    </div>
+                                    <p class="mb-1 adaptive-text-muted small">Le devis #DEV-2026-004 pour votre projet "Refonte Web" est prêt.</p>
+                                </a>
+                                </div>
+                                <div class="list-group list-group-flush">
+                                    <a href="#" class="list-group-item list-group-item-action bg-transparent border-secondary py-3 px-4">
+                                        <div class="d-flex w-100 justify-content-between align-items-center">
+                                            <h6 class="mb-1 adaptive-text fw-bold">Nouveau Devis disponible</h6>
+                                            <small class="text-primary">À l'instant</small>
+                                        </div>
+                                        <p class="mb-1 adaptive-text-muted small">Le devis #DEV-2026-004 pour votre projet "Refonte Web" est prêt.</p>
+                                    </a>
+                                    </div>
+                        </div>
+                        <div class="modal-footer border-secondary justify-content-center">
+                            <button type="button" class="btn btn-link adaptive-text-muted text-decoration-none btn-sm" onclick="alert('Marqué comme lu')">Tout marquer comme lu</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-profile" class="content-section py-3">
+                <div class="card bg-transparent border-secondary p-4 rounded-4">
+                    <h4 class="mb-4">Mon Profil</h4>
+                    <form id="profileForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label text-white-50 small">Nom complet</label>
+                                <input type="text" class="form-control  border-secondary text-white" value="Jean Dupont">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-white-50 small">Email</label>
+                                <input type="email" class="form-control  border-secondary text-white" value="jean.dupont@email.com">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-white-50 small">Téléphone</label>
+                                <input type="text" class="form-control  border-secondary text-white" value="+33 6 12 34 56 78">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-white-50 small">Entreprise</label>
+                                <input type="text" class="form-control  border-secondary text-white" value="Ma Société SAS">
+                            </div>
+                            <div class="col-12 mt-4">
+                                <button type="button" class="btn btn-primary px-4" onclick="alert('Profil mis à jour !')">Enregistrer les modifications</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById('sidebarMenu').classList.toggle('show');
+        document.getElementById('overlay').classList.toggle('show');
+    }
+
+    const devis = [
+        { ref: "DEV-2026-003", date: "2026-01-28", montant: "850 €", status: "En attente" },
+        { ref: "DEV-2026-002", date: "2026-01-20", montant: "2,400 €", status: "Payé" },
+        { ref: "DEV-2026-001", date: "2026-01-15", montant: "1,200 €", status: "Signé" }
+    ];
+
+    function renderDevis() {
+        const list = document.getElementById('devisList');
+        const sorted = devis.sort((a, b) => new Date(b.date) - new Date(a.date));
+        list.innerHTML = sorted.map(d => `
+            <tr>
+                <td><span class="fw-bold">${d.ref}</span></td>
+                <td>${new Date(d.date).toLocaleDateString('fr-FR')}</td>
+                <td>${d.montant}</td>
+                <td><span class="badge bg-secondary">${d.status}</span></td>
+                <td class="text-end"><button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button></td>
+            </tr>
+        `).join('');
+    }
+
+    const projects = [
+    { id: 1, name: "Site E-commerce", status: "attente", date: "25 Janv", progress: 0 },
+    { id: 2, name: "App Mobile", status: "cours", date: "10 Janv", progress: 10 }, // 10% ici
+    { id: 3, name: "Logo Design", status: "termine", date: "02 Janv", progress: 100 },
+    { id: 4, name: "Plateforme SaaS", status: "cours", date: "28 Janv", progress: 65 } // Exemple supplémentaire
+];
+
+function filterProjects(status) {
+    const list = document.getElementById('projectList');
+    const title = document.getElementById('projectTitle');
+    
+    const titles = { all: 'Tous les projets', attente: 'En attente', cours: 'En cours', termine: 'Terminés' };
+    title.innerText = titles[status] || titles.all;
+
+    const filtered = status === 'all' ? projects : projects.filter(p => p.status === status);
+    
+    list.innerHTML = filtered.map(p => {
+        let progressHtml = "";
+        
+        // Détermination de la couleur en fonction du pourcentage
+        let barColor = "bg-danger"; // Par défaut rouge
+        if (p.progress >= 100) barColor = "bg-success";
+        else if (p.progress >= 70) barColor = "bg-info";
+        else if (p.progress >= 30) barColor = "bg-warning text-dark";
+
+        if (p.status === "cours" || p.status === "termine") {
+            progressHtml = `
+                <div class="mt-2" style="max-width: 250px;">
+                    <div class="d-flex justify-content-between mb-1" style="font-size: 0.7rem;">
+                        <span class="text-white-50 uppercase fw-bold">Progression</span>
+                        <span class="fw-bold ${p.progress === 100 ? 'text-success' : ''}">${p.progress}%</span>
+                    </div>
+                    <div class="progress" style="height: 8px; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                        <div class="progress-bar progress-bar-striped ${p.progress < 100 ? 'progress-bar-animated' : ''} ${barColor}" 
+                             role="progressbar" 
+                             style="width: ${p.progress}%" 
+                             aria-valuenow="${p.progress}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        return `
+            <tr class="align-middle">
+                <td class="py-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div>
+                            <span class="fw-bold d-block mb-1">${p.name}</span>
+                            ${progressHtml}
+                        </div>
+                    </div>
+                </td>
+                <td class="text-end py-3">
+                    <span class="badge ${p.status === 'termine' ? 'bg-success-subtle text-success' : ' border border-secondary text-white-50'} rounded-pill px-3">
+                        ${p.date}
+                    </span>
+                </td>
+            </tr>`;
+    }).join('');
+}
+
+    function switchTab(tabId, el) {
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        if(el) el.classList.add('active');
+        if (window.innerWidth < 768) {
+            const sidebar = document.getElementById('sidebarMenu');
+            if(sidebar.classList.contains('show')) toggleSidebar();
+        }
+    }
+
+    function toggleTheme() {
+    const html = document.getElementById('mainHtml');
+    const themeIcon = document.querySelector('.bi-moon-stars, .bi-sun');
+    const current = html.getAttribute('data-bs-theme');
+    
+    if (current === 'dark') {
+        html.setAttribute('data-bs-theme', 'light');
+        // On change l'icône en soleil pour le mode clair
+        if(themeIcon) {
+            themeIcon.classList.replace('bi-moon-stars', 'bi-sun');
+        }
+    } else {
+        html.setAttribute('data-bs-theme', 'dark');
+        // On remet la lune pour le mode sombre
+        if(themeIcon) {
+            themeIcon.classList.replace('bi-sun', 'bi-moon-stars');
+        }
+    }
+    
+    // On relance le rendu des projets pour que les barres de progression s'adaptent
+    filterProjects(document.getElementById('projectTitle').innerText === 'Tous les projets' ? 'all' : 'cours');
+}
+
+    // 3. Gestion de la déconnexion
+    document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                logout();
+    }); 
+
+       
+    function logout() {
+        // Supprime les données locales
+        localStorage.removeItem('user');
+        
+        // Optionnel : Appel au serveur pour supprimer le cookie HTTP-only
+        fetch('http://localhost:3001/logout', { method: 'POST' })
+        .finally(() => {
+            // Redirection vers l'accueil
+            window.location.href = 'index.html';
+        });
+    }
+
+
+//     function updateGreeting() {
+//     const greetingElement = document.getElementById('welcome-message');
+//     const hour = new Date().getHours();
+//     const userData = localStorage.getItem('user');
+//     const user = JSON.parse(userData);
+//     const userName = user.firstname; // Vous pouvez dynamiser ce nom
+//     let message = "";
+//     let icon = "";
+
+//     if (hour >= 5 && hour < 12) {
+//         message = "Bonjour";
+//         icon = '<i class="bi bi-brightness-high text-warning me-2"></i>';
+//     } else if (hour >= 12 && hour < 18) {
+//         message = "Bon après-midi"
+//     icon = '<i class="bi bi-sun-fill text-warning me-2"></i>';
+//     } else {
+//         message = "Bonsoir";
+//         icon = '<i class="bi bi-moon-stars-fill text-primary me-2"></i>';
+//     }
+
+//     // Injection du message embelli
+//     greetingElement.innerHTML = `${icon}${message}, <span class="text-primary">${userName}</span>`;
+// }
+
+// Modifiez votre window.onload existant pour inclure la fonction
+window.onload = () => {
+    filterProjects('all');
+    renderDevis();
+    updateGreeting(); // Appel de la nouvelle fonction
+};
+</script>
+</body>
+</html>

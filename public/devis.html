@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/logo.avif" sizes="any">
+    <link rel="icon" href="images/logo.avif"  sizes="16x16">
+    <link rel="icon" href="images/logo.avif" sizes="32x32">
+    <title>
+        Demander un devis
+    </title>
+    <meta name="description" content="Nous créons des sites web, applications mobiles et expériences digitales exceptionnelles qui génèrent des résultats.">
+    <meta name="author" content="MPE Digital Solutions">
+    <meta name="keywords" content="web development,mobile app development,digital marketing,SEO services,e-commerce solutions,UI/UX design,web design,digital agency,website development,online marketing">
+    <meta name="creator" content="MPE Digital Solutions">
+    <meta name="publisher" content="MPE DIGITAL SOLUTIONS">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <link rel="stylesheet" href="styles/index.css">
+    <style>
+        .shadow-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 1rem 3rem rgba(0,0,0,.175) !important;
+        }
+        .transition-all {
+            transition: all 0.3s ease;
+        }
+        .border-dashed {
+            border-style: dashed !important;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #2c64e3;
+            background-color: #fff;
+        }
+
+        .card-body {
+           height: auto;
+        }
+
+      
+            @keyframes float {
+                0% { transform: translateY(0px) rotate(0deg); }
+                50% { transform: translateY(-20px) rotate(5deg); }
+                100% { transform: translateY(0px) rotate(0deg); }
+            }
+            
+            .icon-floating {
+                animation: float 6s ease-in-out infinite;
+            }
+        
+            .animate-fadeInUp {
+                animation: fadeInUp 0.8s ease-out forwards;
+            }
+        
+            @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(30px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            .font-display {
+                font-family: 'Poppins', sans-serif; /* Assurez-vous d'avoir une police moderne */
+            }
+        
+         /* Cache tout le corps de la page par défaut */
+            body { display: none; }
+
+    </style>
+
+
+<script>
+    (function protectPage() {
+        const userData = localStorage.getItem('user');
+        
+        if (userData) {
+            // ✅ UTILISATEUR CONNECTÉ
+            console.log("Accès autorisé");
+            
+            // On attend que le DOM soit chargé pour afficher le body
+            document.addEventListener("DOMContentLoaded", function() {
+                document.body.style.display = "block";
+                
+                // Optionnel : Afficher le prénom si tu as un élément avec l'id 'userName'
+                // const user = JSON.parse(userData);
+                // const nameElement = document.getElementById('userName');
+                // if (nameElement) nameElement.innerText = user.firstname;
+            });
+        } else {
+            // ❌ PAS CONNECTÉ
+            window.location.href = "devis-login.html";
+        }
+    })();
+</script>
+
+   
+</head>
+
+<body>
+    <!-- <header class="navbar navbar-expand-lg sticky-top header-glassmorphism py-1 px-0" style="position: fixed !important; top: 0; left: 0; right: 0; z-index: 1995 !important;">
+        <div class="container-fluid container-xl">
+            <a class="logo-wrapper p-0 d-inline-block" href="index.html" aria-label="MPE DIGITAL SOLUTIONS - Home">
+                <img alt="MPE DIGITAL SOLUTIONS Logo" src="images/logo.avif" class="logo-custom">
+            </a>
+    
+            <div class="d-lg-none d-flex flex-column header-contact gap-1 flex-grow-1 px-0 overflow-hidden" style="max-width: calc(100% - 200px);">
+                <a href="https://wa.me/33638055446" class="text-decoration-none d-flex align-items-center gap-1 text-success" target="_blank">
+                    <i class="bi bi-whatsapp"></i>
+                    <span class="text-success fw-bold small">+33 6 38 05 54 46</span>
+                </a>
+                <a href="mailto:contact@mpedigitalsolutions.com" class="text-decoration-none d-flex align-items-center gap-1 text-primary">
+                    <i class="bi bi-envelope mt-1"></i> <span class="text-break small">contact@mpedigitalsolutions.com</span>
+                </a>
+            </div>
+    
+            <button class="navbar-toggler border-0 p-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Menu" id="nav-icon-trigger">
+                <div class="nav-icon">
+                    <span></span><span></span><span></span>
+                </div>
+            </button>
+    
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1 text-center">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Accueil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="portfolio.html">Nos Réalisations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">À propos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                </ul>
+    
+                <div class="d-flex flex-column flex-lg-row align-items-center justify-content-end gap-3">
+                    
+                    <div class="d-flex flex-row gap-2 align-items-center justify-content-center">
+                        <button id="theme-toggler" class="btn btn-theme p-0 d-flex align-items-center justify-content-center shadow-none" style="width: 45px; height: 40px; border-radius: 10px;" aria-label="Changer le thème">
+                            <i id="theme-icon" class="bi bi-moon-stars-fill text-warning"></i>
+                        </button>
+    
+                        <button id="lang-switcher" class="btn btn-lang position-relative overflow-hidden p-0 shadow-none border-0" 
+                        style="width: 50px; height: 40px; border-radius: 10px;" 
+                        data-current-lang="FR">
+                    
+                            <div id="lang-container" class="w-100 h-100 d-flex align-items-center justify-content-center position-relative">
+                                
+                                <img id="flag-icon" 
+                                    src="https://flagcdn.com/w80/gb.png" 
+                                    alt="Flag" 
+                                    class="position-absolute start-0 top-0 w-100 h-100"
+                                    style="object-fit: cover; z-index: 1; filter: brightness(0.6);">
+                        
+                                <span id="lang-label" 
+                                    class="fw-bold text-white position-relative" 
+                                    style="font-size: 0.85rem; letter-spacing: 1px; z-index: 2; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); transition: all 0.3s ease">
+                                    EN
+                                </span>
+                            </div>
+                        </button>
+    
+                        <div class="dropdown">
+                            <button class="btn profil  p-0 d-flex align-items-center justify-content-center shadow-none" 
+                                     type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-circle fs-5"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="border-radius: 12px; margin-top: 10px;">
+                                <li><a class="dropdown-item py-2" href="login.html"><i class="bi bi-box-arrow-in-right me-2"></i>Connexion</a></li>
+                                <li><a class="dropdown-item py-2" href="register.html"><i class="bi bi-person-plus me-2"></i>S'inscrire</a></li>
+                            </ul>
+                        </div>
+                    </div>
+    
+                    <a href="devis.html" class="btn btn-takeit px-4 py-2 text-white fw-bold shadow-sm text-center text-nowrap" style="min-width: 170px; border-radius: 10px; background: linear-gradient(135deg, #2c64e3, #078251); border: none;">
+                        Demander un devis
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>   -->
+
+     <main>
+
+        <section class="position-relative overflow-hidden py-3 px-4" style="min-height: 60vh; background: linear-gradient(135deg, #1a1a1a 0%, #2c64e3 100%);">
+    
+            <a href="index.html" class=" position-relative mb-3 top-2 ms-3 text-white text-decoration-none d-flex align-items-center gap-2" style="z-index: 1000;">
+                <i class="bi bi-house-door fs-4"></i>
+                <span class="small">Accueil</span>
+            </a>
+
+            <div class="position-absolute top-0 start-0 w-100 h-100" style="background: url('https://www.transparenttextures.com/patterns/cubes.png'); opacity: 0.1;"></div>
+          
+            <div class="container position-relative z-3 h-100 d-flex align-items-center">
+                <div class="row w-100 align-items-center g-5">
+                    
+                    <div class="col-12 col-lg-7 text-center text-lg-start">
+                        
+                        <div class="animate-fadeInUp">
+                            
+                            <div class="mb-4">
+                                <span class="d-inline-block px-3 py-2 rounded-pill text-white border border-white-50 shadow-sm" 
+                                      style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); font-size: 0.85rem; letter-spacing: 0.5px;">
+                                    <i class="bi bi-lightning-charge-fill me-2 text-warning"></i>
+                                    Obtenez une estimation instantanée pour votre projet
+                                </span>
+                            </div>
+        
+                            <h1 class="display-3 fw-bold text-white mb-4 font-display" style="text-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                                Demander un <span style="background: linear-gradient(to right, #ffffff, #a5c0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Devis</span>
+                            </h1>
+        
+                            <p class="lead text-white-50 mb-0 mx-auto mx-lg-0" style="max-width: 550px; font-size: 1.25rem; line-height: 1.6;">
+                                Remplissez le formulaire ci-dessous pour recevoir un devis personnalisé, 
+                                précis et adapté à vos ambitions digitales.
+                            </p>
+                        </div>
+                    </div>
+        
+                    <div class="col-lg-5 d-none d-lg-flex justify-content-center align-items-center">
+                        <div class="icon-floating shadow-lg d-flex align-items-center justify-content-center" 
+                             style="width: 180px; height: 180px; border-radius: 40px; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(15px);">
+                            
+                           <img src="images/logo.avif" width="150px" height="150px" alt="">
+                            
+                            <div class="position-absolute top-0 end-0 bg-success rounded-circle shadow-sm" style="width: 25px; height: 25px; margin-top: -10px; margin-right: -10px; border: 3px solid #1a1a1a;"></div>
+                        </div>
+                    </div>
+        
+                </div>
+            </div>
+        </section>
+        
+      
+            
+        <section class="py-5 bg-light dark-bg-none">
+            <div class="container max-w-7xl">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10 col-xl-8">
+                        
+                        <div class="card border-0 shadow-lg rounded-4 overflow-hidden shadow-hover transition-all" id="request-form">
+                            
+                            <div class="card-header bg-white border-0 pt-4 px-4 px-md-5">
+                                <h2 class="h4 fw-bold text-dark mb-1">Envoyer la demande</h2>
+                                <div class="gradient-line w-25" style="height: 3px; background: linear-gradient(90deg, #2c64e3, #078251); border-radius: 2px;"></div>
+                            </div>
+        
+                            <div class="card-body p-4 p-md-5">
+                                <form class="row g-4">
+                                    
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Nom <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control shadow-none border-light-subtle bg-light py-2" placeholder="Votre nom complet" required>
+                                    </div>
+        
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">E-mail <span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control shadow-none border-light-subtle bg-light py-2" placeholder="votre.email@exemple.com" required>
+                                    </div>
+        
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Entreprise</label>
+                                        <input type="text" class="form-control shadow-none border-light-subtle bg-light py-2" placeholder="Nom de votre entreprise">
+                                    </div>
+        
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Téléphone</label>
+                                        <input type="tel" class="form-control shadow-none border-light-subtle bg-light py-2" placeholder="(+237) 6 00 00 00 00">
+                                    </div>
+        
+                                    <div class="col-12">
+                                        <label class="form-label fw-semibold small">Décrivez votre projet <span class="text-danger">*</span></label>
+                                        <textarea class="form-control shadow-none border-light-subtle bg-light" rows="5" placeholder="Décrivez en détail votre projet, vos objectifs..." required></textarea>
+                                    </div>
+        
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Date de démarrage souhaitée</label>
+                                        <input type="date" class="form-control shadow-none border-light-subtle bg-light py-2">
+                                    </div>
+        
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Durée estimée</label>
+                                        <select class="form-select shadow-none border-light-subtle bg-light py-2">
+                                            <option selected disabled>Choisir</option>
+                                            <option value="1_week">1 semaine</option>
+                                            <option value="2_4_weeks">2-4 semaines</option>
+                                            <option value="1_3_months">1-3 mois</option>
+                                            <option value="3_plus_months">3+ mois</option>
+                                        </select>
+                                    </div>
+        
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Type de services</label>
+                                        <select class="form-select shadow-none border-light-subtle bg-light py-2">
+                                            <option selected disabled>Choisir</option>
+                                            <option value="web">Développement Web</option>
+                                            <option value="mobile">Développement Mobile</option>
+                                            <option value="marketing">Marketing Digital</option>
+                                            <option value="design">Design Graphique</option>
+                                        </select>
+                                    </div>
+        
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Périmètre / Fonctionnalités</label>
+                                        <select class="form-select shadow-none border-light-subtle bg-light py-2">
+                                            <option value="local" selected>Local</option>
+                                            <option value="national">National</option>
+                                            <option value="international">International</option>
+                                        </select>
+                                    </div>
+        
+                                    <div class="col-12">
+                                        <label class="form-label fw-semibold small">Exemples de référence (liens ou images)</label>
+                                        <input type="text" class="form-control shadow-none border-light-subtle bg-light py-2" placeholder="https://exemple.com, image1.png...">
+                                    </div>
+        
+                                    <div class="col-12">
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input shadow-none" type="checkbox" id="mobileReady" checked>
+                                            <label class="form-check-label small" for="mobileReady">Design adaptable au téléphone</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input shadow-none" type="checkbox" id="logoColors" checked>
+                                            <label class="form-check-label small" for="logoColors">Utiliser les couleurs du logo</label>
+                                        </div>
+                                    </div>
+        
+                                    <div class="col-12">
+                                        <div class="border-2 border-dashed rounded-3 p-4 text-center bg-light-subtle border-primary-subtle">
+                                            <label class="form-label fw-bold d-block mb-2">Joindre des fichiers (optionnel)</label>
+                                            <input type="file" class="form-control form-control-sm mb-2" multiple accept=".pdf,.doc,.docx,.png,.jpg,.zip">
+                                            <p class="text-muted mb-0 small" style="font-size: 0.7rem;">Jusqu'à 5 fichiers, max 5 Mo. PDF, DOC, PNG, ZIP</p>
+                                            <p class="text-primary fw-bold small mt-2 d-none d-md-block">Glisser-déposer les fichiers ici</p>
+                                        </div>
+                                    </div>
+        
+                                    <div class="col-12">
+                                        <button type="submit" class="btn w-100 py-3 text-white fw-bold shadow-sm transition-all rounded-3" 
+                                                style="background: linear-gradient(135deg, #2c64e3, #078251); border: none;">
+                                            Envoyer la demande <i class="bi bi-send-fill ms-2"></i>
+                                        </button>
+                                    </div>
+        
+                                </form>
+                            </div>
+                        </div> </div>
+                </div>
+            </div>
+        </section>
+        
+       
+
+    </main>    
+
+        <footer class="footer-modern position-relative overflow-hidden reveal-section-bottom  text-light">
+            <div class="footer-top-border"></div>
+        
+            <div class="footer-bg-effects position-absolute inset-0">
+                <div class="blob blob-center"></div>
+                <div class="blob blob-top-right"></div>
+                <div class="blob blob-bottom-left"></div>
+            </div>
+        
+            <div class="container position-relative z-1 py-5">
+                <section class="row gy-5 mb-5 border-bottom border-secondary pb-5">
+                    <div class="col-12 col-lg-6">
+                        <a class="d-inline-block mb-3 text-decoration-none" href="/fr">
+                            <h2 class="h3 fw-bold text-white mb-0">MPE DIGITAL SOLUTIONS</h2>
+                        </a>
+                        <p class="text-white small max-w-md">
+                            Agence digitale de classe mondiale offrant des résultats exceptionnels
+                        </p>
+                        <div class="d-flex flex-wrap gap-2 mt-4 small text-primary">
+                            <span>Afrique</span><span>•</span>
+                            <span>Europe</span><span>•</span>
+                            <span>Asie</span><span>•</span>
+                            <span>Amérique du Sud</span><span>•</span>
+                            <span>Amérique du Nord</span>
+                        </div>
+                    </div>
+        
+                    <div class="col-12 col-lg-6">
+                        <div class="newsletter-card p-4 rounded-4 bg-dark-subtle">
+                            <h4 class="h6 fw-bold text-white mb-2">Votre Newsletter</h4>
+                            <p class="small text-white mb-4">
+                                Inscrivez-vous à notre newsletter pour rester informé(e) des dernières tendances...
+                            </p>
+                            <form class="row g-2">
+                                <div class="col-12 col-sm">
+                                    <input type="email" class="form-control form-control-dark" placeholder="E-mail" required>
+                                </div>
+                                <div class="col-12 col-sm-auto">
+                                    <button class="btn btn-primary px-4 w-100" type="submit">S'inscrire</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+        
+                <section class="row gy-4 mb-5">
+                    <div class="col-6 col-md-4">
+                        <h4 class="h6 fw-bold text-white mb-4">Nos Services</h4>
+                        <ul class="list-unstyled d-grid gap-2">
+                            <li><a href="/fr/services" class=" text-decoration-none hover-white">Web Development</a></li>
+                            <li><a href="/fr/services/hosting" class=" text-decoration-none hover-white">Hebergement Web</a></li>
+                            <li><a href="/fr/services/project-management" class=" text-decoration-none hover-white">Product Management</a></li>
+                            <li><a href="/fr/services/digital-marketing" class=" text-decoration-none hover-white">Marketing</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="col-6 col-md-4">
+                        <h4 class="h6 fw-bold text-white mb-4">Légal</h4>
+                        <ul class="list-unstyled d-grid gap-2">
+                            <li><a href="/fr/privacy" class=" text-decoration-none hover-white">Politique de Confidentialité</a></li>
+                            <li><a href="/fr/terms" class=" text-decoration-none hover-white">Conditions d'Utilisation</a></li>
+                        </ul>
+                    </div>
+        
+                    <div class="col-12 col-md-4">
+                        <h4 class="h6 fw-bold text-white mb-4">Contacts</h4>
+                        <ul class="list-unstyled d-flex flex-column gap-3 small text-secondary">
+                            <li>
+                                <p class="text-white fw-medium mb-1" style="font-size: 0.75rem;">E-mail</p>
+                                <a href="mailto:contact@mpedigitalsolutions.com" class="text-secondary text-decoration-none text-hover-white transition">
+                                    contact@mpedigitalsolutions.com
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <div class="mb-2">
+                                    <p class="text-white fw-medium mb-1" style="font-size: 0.75rem;">Yaoundé</p>
+                                    <p class="mb-1 " style="font-size: 0.75rem;">Nkoabang – Entrée Carrière (Yaoundé)</p>
+                                    <div class="d-flex flex-wrap gap-2 mt-1">
+                                        <a href="https://wa.me/237640465182" class="d-flex align-items-center gap-1 text-decoration-none text-secondary text-hover-white transition" target="_blank">
+                                            <i class="bi bi-whatsapp" style="color:#25D366"></i><span>640 46 51 82</span>
+                                        </a>
+                                        <a href="https://wa.me/237652799181" class="d-flex align-items-center gap-1 text-decoration-none text-secondary text-hover-white transition" target="_blank">
+                                            <i class="bi bi-whatsapp" style="color:#25D366"></i><span>652 79 91 81</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                        
+                            <li>
+                                <div class="mb-2">
+                                    <p class="text-white fw-medium mb-1" style="font-size: 0.75rem;">Douala</p>
+                                    <p class="mb-1 " style="font-size: 0.75rem;">Cité des palmiers</p>
+                                    <div class="d-flex flex-wrap gap-2 mt-1">
+                                        <a href="https://wa.me/237657128712" class="d-flex align-items-center gap-1 text-decoration-none text-secondary text-hover-white transition" target="_blank">
+                                            <i class="bi bi-whatsapp" style="color:#25D366"></i><span>657 12 87 12</span>
+                                        </a>
+                                        <a href="https://wa.me/237673071017" class="d-flex align-items-center gap-1 text-decoration-none text-secondary text-hover-white transition" target="_blank">
+                                            <i class="bi bi-whatsapp" style="color:#25D366"></i><span>673 07 10 17</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                        
+                            <li>
+                                <div class="mb-2">
+                                    <p class="text-white fw-medium mb-1" style="font-size: 0.75rem;">France</p>
+                                    <p class="mb-1 " style="font-size: 0.75rem;">91096, Paris, France</p>
+                                    <div class="d-flex flex-wrap gap-2 mt-1">
+                                        <a href="https://wa.me/33638055446" class="d-flex align-items-center gap-1 text-decoration-none text-secondary text-hover-white transition" target="_blank">
+                                            <i class="bi bi-whatsapp" style="color:#25D366"></i><span>+33 6 38 05 54 46</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                        
+                            <li class="d-flex align-items-center gap-2 text-secondary">
+                                <i class="bi bi-clock" style="color:#25D366"></i>
+                                <span>Lundi - Dimanche: 08h - 20h</span>
+                            </li>
+                        
+                            <li>
+                                <a class="d-flex align-items-center gap-2 text-decoration-none transition" href="/fr/contact">
+                                    <i class="bi bi-chat-dots" style="color:#25D366"></i>
+                                    <span class="fw-bold" style="color:#fe4438;">Start project →</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+        
+                <div class="border-top border-secondary pt-4">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 small text-white mb-4">
+                        <p class="mb-0">© Copyright MPE DIGITAL SOLUTIONS. All Rights Reserved</p>
+                        <p class="mb-0">Designed by MDS support</p>
+                    </div>
+                    
+                    <!-- <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-3 pt-4 border-top border-secondary border-opacity-25">
+                        <span class="small text-muted fw-medium">Schéma de Couleurs:</span>
+                        <button class="btn btn-outline-secondary btn-sm d-flex justify-content-between align-items-center gap-3 px-3 py-2" style="min-width: 120px;">
+                            <span>Tech</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                    </div> -->
+                </div>
+            </div>
+        
+        
+        <div class="fixed-bottom d-flex justify-content-end p-3 p-sm-4 pb-4 pe-4 z-3">
+            <button type="button" 
+                    id="backToTop"
+                    class="btn btn-primary rounded-circle shadow-lg scroll-btn d-none" 
+                    style="width: 50px; height: 50px; transition: all 0.3s ease; z-index:100;"
+                    aria-label="Retour en haut">
+                <i class="bi bi-arrow-up fs-4"></i>
+            </button>
+        </div>
+        
+    </footer>
+     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+        
+     <div id="google_translate_element" style="display:none;"></div>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+     <script src="scripts/index.js"></script>                                                  
+  </body>
+</html>
+        

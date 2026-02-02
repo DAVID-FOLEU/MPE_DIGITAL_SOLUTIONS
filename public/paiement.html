@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/logo.avif" sizes="any">
+    <title>Méthodes de paiement - MPE Digital Solutions</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        /* Style des onglets (Tabs) */
+        .nav-payment-container .nav-pills {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px;
+            border-radius: 50px;
+            display: inline-flex;
+        }
+    
+        .nav-payment-container .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+            border-radius: 50px;
+            padding: 10px 25px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+    
+        .nav-payment-container .nav-link.active {
+            background: #2c64e3 !important;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(44, 100, 227, 0.4);
+        }
+    
+        /* Cartes de méthode de paiement */
+        .payment-method-card {
+            background: rgba(255, 255, 255, 0.03);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+    
+        .payment-method-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #2c64e3 !important;
+            transform: translateY(-5px);
+        }
+    
+        .payment-method-card.selected {
+            background: rgba(44, 100, 227, 0.2);
+            border-color: #2c64e3 !important;
+            box-shadow: 0 0 15px rgba(44, 100, 227, 0.3);
+        }
+    
+        /* Barre de défilement pour la liste des agences */
+        .agency-list {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+        .agency-list::-webkit-scrollbar { width: 5px; }
+        .agency-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+    
+        .transition-all { transition: all 0.3s ease; }
+        .x-small { font-size: 0.75rem; }
+    </style>
+</head>
+<body>
+     
+    <main>
+        <section class="min-vh-100 d-flex align-items-center py-5" style="background: radial-gradient(circle at top right, #2c64e3, #1a1a1a 50%);">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+                        
+                        <div class="card border-0 shadow-lg rounded-4 overflow-hidden" style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1) !important;">
+                            <div class="card-body p-4 p-md-5">
+                                
+                                <div class="text-center mb-5">
+                                    <h2 class="h3 fw-bold text-white mb-1">Mode de règlement</h2>
+                                    <p class="text-white-50 small">Choisissez comment vous souhaitez régler vos factures</p>
+                                </div>
+        
+                                <div class="nav-payment-container text-center mb-4">
+                                    <div class="nav nav-pills justify-content-center" id="paymentTab" role="tablist">
+                                        <button class="nav-link active me-2" id="nav-online-tab" data-bs-toggle="tab" data-bs-target="#nav-online" type="button" role="tab">
+                                            <i class="bi bi-credit-card-2-back me-2"></i>Paiement en ligne
+                                        </button>
+                                        <button class="nav-link" id="nav-agency-tab" data-bs-toggle="tab" data-bs-target="#nav-agency" type="button" role="tab">
+                                            <i class="bi bi-geo-alt me-2"></i>En agence physique
+                                        </button>
+                                    </div>
+                                </div>
+        
+                                <div class="tab-content mt-4" id="nav-tabContent">
+                                    <div class="tab-pane fade show active" id="nav-online" role="tabpanel">
+                                        <div class="row g-3">
+                                            <div class="col-12 col-sm-6">
+                                                <div class="payment-method-card text-center p-4 rounded-3 border border-secondary text-white" data-type="mobile">
+                                                    <i class="bi bi-phone h1 text-primary"></i>
+                                                    <h6 class="mt-2 fw-bold">Mobile Money</h6>
+                                                    <p class="x-small text-white-50">Orange, MTN, Wave</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-6">
+                                                <div class="payment-method-card text-center p-4 rounded-3 border border-secondary text-white" data-type="card">
+                                                    <i class="bi bi-bank h1 text-primary"></i>
+                                                    <h6 class="mt-2 fw-bold">Carte Bancaire</h6>
+                                                    <p class="x-small text-white-50">Visa, Mastercard</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <div class="tab-pane fade" id="nav-agency" role="tabpanel">
+                                        <div class="bg-dark bg-opacity-50 p-3 p-md-4 rounded-3 border border-secondary">
+                                            <h6 class="text-white mb-3"><i class="bi bi-geo-fill me-2 text-primary"></i>Nos agences (Cliquez pour choisir)</h6>
+                                            
+                                            <div class="agency-list overflow-auto px-2" style="max-height: 250px;">
+                                                <div class="agency-item p-3 mb-3 border border-secondary rounded-3 text-white" 
+                                                     style="cursor: pointer;" 
+                                                     onclick="selectAgency('Yaoundé', 'Nkoabang – Entrée Carrière')">
+                                                    <div class="fw-bold text-primary">Yaoundé</div>
+                                                    <div class="small text-white-70">Nkoabang – Entrée Carrière</div>
+                                                    <div class="small text-white-50 mt-1"><i class="bi bi-telephone me-2"></i>640 46 51 82 / 652 79 91 81</div>
+                                                </div>
+                                    
+                                                <div class="agency-item p-3 mb-3 border border-secondary rounded-3 text-white" 
+                                                     style="cursor: pointer;" 
+                                                     onclick="selectAgency('Douala', 'Cité des palmiers')">
+                                                    <div class="fw-bold text-primary">Douala</div>
+                                                    <div class="small text-white-70">Cité des palmiers</div>
+                                                    <div class="small text-white-50 mt-1"><i class="bi bi-telephone me-2"></i>657 12 87 12 / 673 07 10 17</div>
+                                                </div>
+                                    
+                                                <div class="agency-item p-3 border border-secondary rounded-3 text-white" 
+                                                     style="cursor: pointer;" 
+                                                     onclick="selectAgency('France (Paris)', '91096, Paris, France')">
+                                                    <div class="fw-bold text-primary">France (Paris)</div>
+                                                    <div class="small text-white-70">91096, Paris, France</div>
+                                                    <div class="small text-white-50 mt-1"><i class="bi bi-telephone me-2"></i>+33 6 38 05 54 46</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div class="text-center mt-5">
+                                    <button class="btn btn-primary px-5 py-3 fw-bold rounded-3 shadow-lg transition-all" id="confirmPaymentBtn">
+                                        Confirmer mon choix <i class="bi bi-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const methodCards = document.querySelectorAll('.payment-method-card');
+        const confirmBtn = document.getElementById('confirmPaymentBtn');
+        const onlineTab = document.getElementById('nav-online-tab');
+        let selectedType = null; // 'mobile' ou 'card'
+
+        // 1. Sélection du type de paiement en ligne
+        methodCards.forEach(card => {
+            card.addEventListener('click', () => {
+                methodCards.forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                
+                selectedType = card.getAttribute('data-type');
+                const name = card.querySelector('h6').innerText;
+                confirmBtn.innerText = `Payer par ${name}`;
+            });
+        });
+
+        // 2. Changement d'onglet (Réinitialisation ou Agence)
+        const tabLinks = document.querySelectorAll('button[data-bs-toggle="tab"]');
+        tabLinks.forEach(tab => {
+            tab.addEventListener('shown.bs.tab', (e) => {
+                if (e.target.id === 'nav-agency-tab') {
+                    selectedType = "agency";
+                    confirmBtn.innerText = "Télécharger reçu";
+                } else {
+                    selectedType = null;
+                    confirmBtn.innerText = "Confirmer mon choix";
+                    methodCards.forEach(c => c.classList.remove('selected'));
+                }
+            });
+        });
+
+        // 3. Logique de redirection au clic sur le bouton
+        confirmBtn.addEventListener('click', () => {
+            // Si on est sur l'onglet en ligne
+            if (onlineTab.classList.contains('active')) {
+                if (selectedType === 'mobile') {
+                    window.location.href = 'paiement-mobile.html';
+                } else if (selectedType === 'card') {
+                    window.location.href = 'paiement-bancaire.html';
+                } else {
+                    alert('Veuillez sélectionner une méthode (Mobile ou Carte) pour continuer.');
+                }
+            } 
+            // Si on est sur l'onglet agence
+            else if (selectedType === "agency") {
+                window.location.href = 'recu-agence.html';
+                // alert("Vous pouvez vous rendre dans l'une de nos agences à Yaoundé, Douala ou Paris muni de votre facture.");
+                // Optionnel: window.print();
+            }
+        });
+    });
+
+    function selectAgency(ville, adresse) {
+    // 1. Enregistrer dans le localStorage
+    localStorage.setItem('selectedAgencyVille', ville);
+    localStorage.setItem('selectedAgencyAdresse', adresse);
+
+    // 2. Feedback visuel (optionnel mais recommandé)
+    document.querySelectorAll('.agency-item').forEach(el => {
+        el.classList.remove('border-primary', 'bg-primary', 'bg-opacity-10');
+        el.classList.add('border-secondary');
+    });
+    
+    // On met en avant l'élément cliqué
+    const clickedEl = event.currentTarget;
+    clickedEl.classList.replace('border-secondary', 'border-primary');
+    clickedEl.classList.add('bg-primary', 'bg-opacity-10');
+
+    console.log("Agence sauvegardée : " + ville);
+    
+    // Optionnel : Rediriger vers la page devis après 1 seconde
+    // window.location.href = "page-devis.html";
+}
+
+
+    </script>
+</body>
+</html>

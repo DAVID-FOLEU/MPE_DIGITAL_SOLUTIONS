@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/logo.avif" sizes="any">
+    <title>Paiement Mobile - MPE Digital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body { background: radial-gradient(circle at top right, #2c64e3, #1a1a1a 50%);  color: white; }
+        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; }
+        .operator-card { width: 80px ; height:70px ; cursor: pointer; border: 2px solid transparent; transition: 0.3s; background: rgba(255,255,255,0.05); }
+        .operator-card.selected { border-color: #2c64e3; background: rgba(44, 100, 227, 0.2); }
+        .operator-card img {width: 100% ; height:100%; border-radius: 8px; object-fit: cover;}
+    </style>
+</head>
+<body class="d-flex align-items-center min-vh-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 col-lg-5">
+                <div class="glass-card p-4 p-md-5 shadow-lg">
+                    <a href="paiement.html" class="text-white-50 text-decoration-none small mb-4 d-inline-block"><i class="bi bi-arrow-left me-2"></i>Retour</a>
+                    
+                    <h2 class="h4 fw-bold mb-4 text-center">Paiement Mobile</h2>
+                    
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-white-50">Sélectionnez votre opérateur</label>
+                        <div class="row g-2">
+                            <div class="col-4">
+                                <div class="operator-card  text-center rounded-3" onclick="selectOp(this, 'Orange')">
+                                      <img src="https://upload.wikimedia.org/wikipedia/commons/c/c8/Orange_logo.svg" alt="Orange" class="op-logo">
+                                    
+                                </div>
+                            </div>
+                            
+                            <div class="col-4">
+                                <div class="operator-card text-center rounded-3" onclick="selectOp(this, 'MTN')">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/New-mtn-logo.jpg" alt="MTN" class="op-logo">
+                                </div>
+                            </div>
+                            
+                            <div class="col-4">
+                                <div class="operator-card text-center rounded-3" onclick="selectOp(this, 'Wave')">
+                                   
+                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHi59Ef5ov7FqJIgts-7fSwZ7F9Dn7bUtT-g&s" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Wave_Logo.png/600px-Wave_Logo.png'" alt="Wave" class="op-logo">
+                                    
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="mobileForm">
+                        <div class="mb-4 mt-2">
+                            <label class="form-label small fw-bold text-white-50">Numéro de téléphone</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent border-secondary text-white"><i class="bi bi-telephone"></i></span>
+                                <input type="tel" class="form-control bg-transparent border-secondary text-white shadow-none" id="phoneInput" placeholder="Ex: 677000000" required>
+                            </div>
+                            <div id="phoneFeedback" class="small mt-2 d-none"></div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold text-white-50">Montant</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent border-secondary text-white"><i class="bi bi-cash-stack"></i></span>
+                                <input type="tel" class="form-control bg-transparent border-secondary text-white shadow-none" id="montantInput" placeholder="Ex: 3000£" required>
+                            </div>
+                        </div>
+                    
+                        <button type="submit" id="submitBtn" class="btn btn-primary w-100 py-3 fw-bold rounded-3 shadow disabled" disabled>
+                            Valider le paiement <i class="bi bi-shield-check ms-2"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+       document.addEventListener('DOMContentLoaded', () => {
+    const phoneInput = document.getElementById('phoneInput');
+    const montantInput = document.getElementById('montantInput');
+    const feedback = document.getElementById('phoneFeedback');
+    const submitBtn = document.getElementById('submitBtn');
+    const mobileForm = document.getElementById('mobileForm');
+
+    // 1. Bloquer la saisie de tout ce qui n'est pas un chiffre ou le +
+    phoneInput.addEventListener('keypress', (e) => {
+        if (!/[0-9+]/.test(e.key)) {
+            e.preventDefault();
+        }
+    });
+
+    montantInput.addEventListener('keypress', (e) => {
+        if (!/[0-9]/.test(e.key)) {
+            e.preventDefault();
+        }
+    });
+
+
+    // Fonction de validation Regex
+    function validatePhone(value) {
+        const cleanNum = value.replace(/\s+/g, '');
+        
+        // Regex Cameroun : +237 suivi de 9 chiffres OU directement 6, 2, 3 suivi de 8 chiffres
+        const regexCam = /^((\+237|237)?)(6|2|3)\d{8}$/;
+        // Regex France : +33 suivi de 9 chiffres OU 0 suivi de 9 chiffres (commençant par 1-9)
+        const regexFra = /^((\+33|0)[1-9])(\d{2}){4}$/;
+
+        if (regexCam.test(cleanNum)) return { valid: true, country: "Cameroun" };
+        if (regexFra.test(cleanNum)) return { valid: true, country: "France" };
+        
+        return { valid: false };
+    }
+
+    // 2. Vérification en temps réel pour activer le bouton
+    function checkFormValidity() {
+       // On vérifie que le champ n'est pas vide ET que le nombre est supérieur à 0
+        const isMontantValid = montantInput.value !== "" && parseFloat(montantInput.value) > 0;
+        const isPhoneValid = validatePhone(phoneInput.value).valid;
+        // window.selectedOperator est défini par ta fonction selectOp() créée précédemment
+        const isOperatorSelected = !!window.selectedOperator;
+
+        if (isPhoneValid && isOperatorSelected && isMontantValid) {
+            submitBtn.classList.remove('disabled');
+            submitBtn.disabled = false;
+        } else {
+            submitBtn.classList.add('disabled');
+            submitBtn.disabled = true;
+        }
+    }
+
+    // Écouter la saisie
+    phoneInput.addEventListener('input', () => {
+        const res = validatePhone(phoneInput.value);
+        
+        if (phoneInput.value.length > 0) {
+            feedback.classList.remove('d-none');
+            if (res.valid) {
+                feedback.innerHTML = `<i class="bi bi-check-circle-fill text-success"></i> Numéro ${res.country} valide`;
+                feedback.className = "small mt-2 text-success";
+                phoneInput.classList.replace('border-secondary', 'border-success');
+                phoneInput.classList.remove('border-danger');
+            } else {
+                feedback.innerHTML = `<i class="bi bi-exclamation-triangle-fill text-danger"></i> Numéro invalide (CM ou FR uniquement)`;
+                feedback.className = "small mt-2 text-danger";
+                phoneInput.classList.add('border-danger');
+            }
+        } else {
+            feedback.classList.add('d-none');
+            phoneInput.classList.remove('border-danger', 'border-success');
+        }
+        
+        checkFormValidity();
+    });
+
+    montantInput.addEventListener('input', () => {
+        checkFormValidity();
+    });
+
+
+    // On s'assure que si l'utilisateur clique sur un opérateur, on vérifie aussi la validité
+    // Modifie ta fonction selectOp pour appeler checkFormValidity()
+    window.selectOp = function(el, op) {
+        document.querySelectorAll('.operator-card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        window.selectedOperator = op; // On stocke l'opérateur
+        checkFormValidity(); // On vérifie si on peut activer le bouton
+    };
+});
+
+
+// Gestion de la soumission du formulaire
+mobileForm.addEventListener('submit', (e) => {
+    // 1. Empêcher le rechargement de la page
+    e.preventDefault();
+
+    // 2. Récupérer les valeurs
+    const numero = phoneInput.value;
+    const operateur = window.selectedOperator; // Récupéré via la fonction selectOp
+    const montant = montantInput.value;
+   
+
+
+    // 3. Vérification de sécurité finale
+    if (operateur && numero && montant) {
+        // 4. Console Log au format demandé
+        console.log(`TRANSACTION DE : ${montant} , AVEC LE NUMERO ${operateur} ${numero}`);
+
+        // Optionnel : Afficher un petit message de succès à l'écran
+        submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Traitement en cours...`;
+        submitBtn.classList.replace('btn-primary', 'btn-success');
+        
+        setTimeout(() => {
+            alert(`Demande pour la transaction de ${montant} fcfa envoyée au ${numero} ! Veuillez confirmer  sur votre téléphone.`);
+            submitBtn.innerHTML = `Valider le paiement <i class="bi bi-shield-check ms-2"></i>`;
+            submitBtn.classList.replace('btn-success', 'btn-primary');
+        }, 1500);
+
+    } else {
+        alert("Erreur : Veuillez sélectionner un opérateur et entrer un numéro valide.");
+    }
+});
+
+</script>
+</body>
+</html>
