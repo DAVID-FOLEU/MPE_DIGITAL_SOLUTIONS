@@ -12,7 +12,7 @@ window.addEventListener('scroll', function() {
 const solution = [
     {
         id: 1,
-        img: "https://www.mpedigitalsolutions.com/_next/image?url=%2Fimages%2FWordPressWebSite%2Fwordpress_img.jpg&w=1080&q=85",
+        img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1080&auto=format&fit=crop",
         titre: "SITES WEB PROFESSIONNELS",
         badge: "Développement Web",
         bg: "bg-warning",
@@ -20,7 +20,7 @@ const solution = [
     },
     {
         id: 2,
-        img: "https://www.mpedigitalsolutions.com/_next/image?url=%2Fimages%2Fe-commerce%2Fecommerce_main_img_1.jpg&w=1080&q=85",
+        img: "https://images.unsplash.com/photo-1556742044-3c52d6e88c62?q=80&w=1080&auto=format&fit=crop",
         titre: "E-COMMERCE",
         badge: "E-commerce",
         bg: "bg-primary",
@@ -28,7 +28,7 @@ const solution = [
     },
     {
         id: 3,
-        img: "https://www.mpedigitalsolutions.com/_next/image?url=%2Fimages%2FMarketingDigital%2Fmarketing_digital_main_1.jpg&w=1080&q=85",
+        img: "https://images.unsplash.com/photo-1533750349088-cd871a92f312?q=80&w=1080&auto=format&fit=crop",
         titre: "MARKETING DIGITAL",
         badge: "Marketing Digital",
         bg: "bg-warning",
@@ -36,7 +36,7 @@ const solution = [
     },
     {
         id: 4,
-        img: "https://www.mpedigitalsolutions.com/_next/image?url=%2Fimages%2Fseo-sea%2Fseo%2Fseo_img_1.avif&w=1080&q=85",
+        img: "https://images.unsplash.com/photo-1571721738239-743c94bb4726?q=80&w=1080&auto=format&fit=crop",
         titre: "VISIBILITÉ",
         badge: "Visibilité & Référencement",
         bg: "bg-primary",
@@ -44,7 +44,7 @@ const solution = [
     },
     {
         id: 5,
-        img: "https://www.mpedigitalsolutions.com/_next/image?url=%2Fimages%2Fui-ux%2Fui-ux_img_1.jpeg&w=1080&q=85",
+        img: "https://images.unsplash.com/photo-1586717791821-3f44a563eb4c?q=80&w=1080&auto=format&fit=crop",
         titre: "DESIGN & UX",
         badge: "Design & UX",
         bg: "bg-warning",
@@ -52,11 +52,11 @@ const solution = [
     },
     {
         id: 6,
-        img: "https://www.mpedigitalsolutions.com/_next/image?url=%2Fimages%2FMaintenancedeSiteWeb%2Fsoftware_maintenance_hero.jpeg&w=1080&q=85",
+        img: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=1080&auto=format&fit=crop",
         titre: "APPLICATIONS MOBILES",
         badge: "Applications mobiles",
         bg: "bg-primary",
-        paragraphe: "Applications mobiles natives et multiplateformes pour iOS et Android qui représentent parfaitement votre entreprise.",
+        paragraphe: "Applications mobiles natives et multiplateformes pour iOS et Android qui représentent parfaitement votre entreprise."
     }
 ];
 
@@ -521,7 +521,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Cache le bouton
             backToTopBtn.classList.remove('show');
         }
-    });
+});
+
 
     // Action de clic pour remonter
     backToTopBtn.addEventListener('click', function() {
