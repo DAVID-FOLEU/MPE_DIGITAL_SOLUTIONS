@@ -160,22 +160,34 @@
 
 function updateGreeting() {
     const greetingElement = document.getElementById('welcome-message');
-    const hour = new Date().getHours();
+    const welcomeBlock = document.querySelector('.sms-accueil'); // On cible le bloc parent
     const userData = localStorage.getItem('user');
+
+    // SI l'utilisateur n'est PAS connecté, on arrête tout
+    if (!userData) {
+        if (welcomeBlock) welcomeBlock.classList.add('d-none'); // On s'assure qu'il est caché
+        return; 
+    }
+
+    // SI on arrive ici, c'est que l'utilisateur est connecté
+    if (welcomeBlock) {
+        welcomeBlock.classList.remove('d-none'); // ON AFFICHE LE BLOC
+    }
+
     const user = JSON.parse(userData);
     const firstName = user.firstname || "";
     const lastName = user.lastname || "";
-        
-        // On récupère les initiales (ex: "John Doe" -> "JD")
-        const initials = (lastName.charAt(0) + firstName.charAt(0)).toUpperCase();
-        
-        // 1. Mise à jour de l'image (Avatar dynamique)
-        const avatarImg = document.querySelector('.cursor-pointer img');
-        if (avatarImg) {
-            avatarImg.src = `https://ui-avatars.com/api/?name=${initials}&background=2c64e3&color=fff&bold=true`;
-            avatarImg.alt = initials;
-        }
+    const hour = new Date().getHours();
     
+    // Ton code pour les initiales et l'avatar
+    const initials = (lastName.charAt(0) + firstName.charAt(0)).toUpperCase();
+    const avatarImg = document.querySelector('.cursor-pointer img');
+    if (avatarImg) {
+        avatarImg.src = `https://ui-avatars.com/api/?name=${initials}&background=2c64e3&color=fff&bold=true`;
+        avatarImg.alt = initials;
+    }
+
+    // Ton code pour le message horaire
     let message = "";
     let icon = "";
 
@@ -183,7 +195,7 @@ function updateGreeting() {
         message = "Bonjour";
         icon = '<i class="bi bi-brightness-high text-warning me-2"></i>';
     } else if (hour >= 12 && hour < 18) {
-        message = "Bon après-midi"
+        message = "Bon après-midi";
     icon = '<i class="bi bi-sun-fill text-warning me-2"></i>';
     } else {
         message = "Bonsoir";
@@ -268,7 +280,7 @@ function updateGreeting() {
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 offset-md-3 offset-lg-2 main-content">
             <div class="d-none d-md-flex justify-content-between align-items-center pt-2 pb-2 mb-1 border-bottom border-secondary">
                 <div class="d-none d-md-flex justify-content-between align-items-center pt-3 pb-3 mb-0">
-                    <div>
+                    <div class="sms-accueil d-none">
                         <h2 class="fw-bold mb-0" id="welcome-message">Espace Client</h2>
                         <p class="text-white-50 small mb-0">Ravi de vous revoir dans votre tableau de bord.</p>
                     </div>
@@ -573,7 +585,7 @@ function filterProjects(status) {
         localStorage.removeItem('user');
         
         // Optionnel : Appel au serveur pour supprimer le cookie HTTP-only
-        fetch('http://localhost:3001/logout', { method: 'POST' })
+        fetch('/api/logout', { method: 'POST' })
         .finally(() => {
             // Redirection vers l'accueil
             window.location.href = 'index.html';

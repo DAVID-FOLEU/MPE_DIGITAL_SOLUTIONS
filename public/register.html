@@ -505,7 +505,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
         password: e.target[3].value
     };
 
-    const response = await fetch('http://localhost:3001/register', {
+    const response = await fetch('/api/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(userData)
