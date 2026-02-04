@@ -179,18 +179,18 @@
                                     <div class="row g-3">
                                         <div class="col-md-6">
                                             <label class="form-label text-white-50 small fw-bold">Prénom</label>
-                                            <input type="text" class="form-control bg-transparent border-secondary text-white shadow-none py-2" placeholder="Jean" required>
+                                            <input type="text" id="prenom" class="form-control bg-transparent border-secondary text-white shadow-none py-2" placeholder="Jean" required>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label text-white-50 small fw-bold">Nom</label>
-                                            <input type="text" class="form-control bg-transparent border-secondary text-white shadow-none py-2" placeholder="Dupont" required>
+                                            <input type="text" id="nom" class="form-control bg-transparent border-secondary text-white shadow-none py-2" placeholder="Dupont" required>
                                         </div>
         
                                         <div class="col-12">
                                             <label class="form-label text-white-50 small fw-bold">Adresse E-mail</label>
                                             <div class="input-group">
                                                 <span class="input-group-text bg-transparent border-secondary text-white-50" style="border-right: none;"><i class="bi bi-envelope"></i></span>
-                                                <input type="email" class="form-control bg-transparent border-secondary text-white shadow-none py-2" placeholder="jean@exemple.com" required style="border-left: none;">
+                                                <input type="email" id="email" class="form-control bg-transparent border-secondary text-white shadow-none py-2" placeholder="jean@exemple.com" required style="border-left: none;">
                                             </div>
                                         </div>
         
@@ -516,10 +516,10 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
 
     // Préparation des données
     const userData = {
-        firstname: form.querySelector('input[placeholder*="Prénom"]').value,
-        lastname: form.querySelector('input[placeholder*="Nom"]').value,
-        email: form.querySelector('input[type="email"]').value,
-        password: form.querySelector('input[type="password"]').value
+        firstname: e.target[0].value,
+        lastname: e.target[1].value,
+        email: e.target[2].value,
+        password: e.target[3].value
     };
 
     try {
