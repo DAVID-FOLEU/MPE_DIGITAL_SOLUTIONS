@@ -31,13 +31,13 @@
             --card-bg: #242424;
             --input-bg: #2d2d2d;
             --text-main: #ffffff;
-            --text-muted: #b2bec3;
+            --text-muted: #ffffff;
         }
     
         main {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--dark-bg);
-            background: linear-gradient(135deg, #1a1a1a 0%, #121212 100%);
+            background: radial-gradient(circle at top right, #2c64e3, #1a1a1a 50%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -47,13 +47,13 @@
         }
     
         .card {
-            background: var(--card-bg);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
             padding: 2.5rem;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
             width: 100%;
             max-width: 420px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
         }
     
         h2 {
@@ -189,7 +189,7 @@
         .btn-reset {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, var(--primary) 0%, #1e4bb5 100%);
+            background:  linear-gradient(135deg, #2c64e3, #078251); border: none;
             color: white;
             border: none;
             border-radius: 10px;
@@ -209,13 +209,24 @@
         .btn-reset:active:not(:disabled) {
             transform: translateY(0);
         }
+
+        /* État Chargement (Cercle) */
+.btn-submit.loading {
+    color: transparent; /* Cache le texte */
+}
+
+/* Animation de rotation pour l'icône */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
     
-        .btn-reset:disabled {
-            background: #444;
-            box-shadow: none;
-            color: #777;
-            cursor: not-allowed;
-        }
+        
     </style>
 </head>
 <body>
@@ -228,7 +239,7 @@
             <div class="input-group d-flex flex-column">
                 <label for="new-password">Nouveau mot de passe</label>
                 <div class="password-wrapper">
-                    <input type="password" id="new-password" placeholder="••••••••" required>
+                    <input type="password" id="new-password" class="form-control bg-transparent border-secondary text-white shadow-none ps-0"  placeholder="••••••••" required>
                     <span class="toggle-password" onclick="toggleMdp('new-password', this)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                     </span>
@@ -250,12 +261,12 @@
             <div class="input-group d-flex flex-column">
                 <label for="confirm-password">Confirmez le mot de passe</label>
                 <div class="password-wrapper">
-                    <input type="password" id="confirm-password" placeholder="••••••••" required disabled>
+                    <input type="password" id="confirm-password" class="form-control bg-transparent border-secondary text-white shadow-none ps-0" placeholder="••••••••" required disabled>
                     
                 </div>
             </div>
 
-            <button type="submit" id="submit-btn" class="btn-reset" disabled>Mettre à jour</button>
+            <button type="submit" id="submit-btn" class="btn btn-reset" disabled>Mettre à jour</button>
         </form>
     </div>
 
@@ -489,47 +500,68 @@
     passwordInput.addEventListener('input', updateUI);
     confirmInput.addEventListener('input', updateUI);
 
-    // --- ENVOI AU BACKEND ---
+    // annimer le bouton de validation
     document.getElementById('resetForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const email = localStorage.getItem('resetEmail');
-        const newPassword = passwordInput.value;
+    e.preventDefault();
+    
+    // On sélectionne le bouton via sa classe
+    const btn = document.querySelector('.btn-reset');
+    const email = localStorage.getItem('resetEmail');
+    const newPassword = document.getElementById('passwordInput').value; // Vérifie que l'ID est correct
 
-        if (!email) {
-            alert("Erreur : Email introuvable. Recommencez la procédure.");
-            window.location.href = "forgot-password.html";
-            return;
-        }
+    // Si on est déjà en cours de chargement, on stoppe
+    if (btn.classList.contains('loading')) return;
 
-        submitBtn.innerText = "Mise à jour...";
-        submitBtn.disabled = true;
+    if (!email) {
+        alert("Erreur : Email introuvable. Recommencez la procédure.");
+        window.location.href = "forgot-password.html";
+        return;
+    }
 
-        try {
-            const response = await fetch('/api/update-password', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, newPassword })
-            });
+    // --- ÉTAT : CHARGEMENT ---
+    const originalContent = btn.innerHTML;
+    btn.classList.add('loading');
+    btn.disabled = true; // Empêche le double clic
+    btn.innerHTML = '<i class="bi bi-arrow-repeat spinner fs-5"></i>';
 
-            const data = await response.json();
+    try {
+        const response = await fetch('/api/update-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, newPassword })
+        });
 
-            if (response.ok) {
+        const data = await response.json();
+
+        if (response.ok) {
+            // --- ÉTAT : SUCCÈS ---
+            btn.classList.remove('loading');
+            btn.classList.add('success'); // Pour le background vert si défini en CSS
+            btn.innerHTML = '<i class="bi bi-check-lg fs-4 text-white"></i>';
+
+            // On attend un peu pour que l'utilisateur voie l'icône de succès
+            setTimeout(() => {
                 alert("Succès ! Votre mot de passe a été mis à jour.");
                 localStorage.removeItem('resetEmail');
                 window.location.href = "login.html";
-            } else {
-                alert("Erreur : " + data.error);
-                submitBtn.disabled = false;
-                submitBtn.innerText = "Mettre à jour";
-            }
-        } catch (error) {
-            console.error("Erreur réseau :", error);
-            alert("Impossible de contacter le serveur.");
-            submitBtn.disabled = false;
-            submitBtn.innerText = "Mettre à jour";
+            }, 600);
+
+        } else {
+            // --- ÉTAT : ERREUR SERVEUR ---
+            alert("Erreur : " + data.error);
+            btn.classList.remove('loading');
+            btn.disabled = false;
+            btn.innerHTML = originalContent;
         }
-    });
+    } catch (error) {
+        // --- ÉTAT : ERREUR RÉSEAU ---
+        console.error("Erreur réseau :", error);
+        alert("Impossible de contacter le serveur.");
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        btn.innerHTML = originalContent;
+    }
+});
 </script>
 </body>
 </html>

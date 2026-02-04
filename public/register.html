@@ -46,6 +46,17 @@
         .card-body {
            height: auto;
         }
+
+         .spinner {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }       
+
     </style>
 </head>
 
@@ -498,36 +509,54 @@
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    const form = e.currentTarget;
+    const btn = form.querySelector('button[type="submit"]');
+    const icon = btn.querySelector('i');
+    const originalIconClass = icon.className; // bi-person-plus-fill ms-2
+
+    // Préparation des données
     const userData = {
-        firstname: e.target[0].value,
-        lastname: e.target[1].value,
-        email: e.target[2].value,
-        password: e.target[3].value
+        firstname: form.querySelector('input[placeholder*="Prénom"]').value,
+        lastname: form.querySelector('input[placeholder*="Nom"]').value,
+        email: form.querySelector('input[type="email"]').value,
+        password: form.querySelector('input[type="password"]').value
     };
 
-    const response = await fetch('/api/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(userData)
-});
+    try {
+        // --- ÉTAT : CHARGEMENT ---
+        btn.disabled = true;
+        icon.className = 'bi bi-arrow-repeat spinner ms-2';
 
-    const result = await response.json();
+        const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(userData)
+        });
 
-    if (response.ok) {
-        // Exemple de ce qu'il faut avoir dans verify.html après succès
+        const result = await response.json();
 
-    localStorage.setItem('user', JSON.stringify(userData)); // On stocke nom, prénom, role
-    
+        if (response.ok) {
+            // --- ÉTAT : SUCCÈS ---
+            icon.className = 'bi bi-check-lg ms-2';
+            
+            localStorage.setItem('user', JSON.stringify(userData));
+            localStorage.setItem('userEmail', userData.email);
 
-        // Sauvegarder l'email pour la page de confirmation
-        localStorage.setItem('userEmail', userData.email);
-        // Redirection vers la page de confirmation
-        window.location.href = "confirmation-inscription.html";
-    } else {
-        alert("Erreur : " + result.error);
+            setTimeout(() => {
+                window.location.href = "confirmation-inscription.html";
+            }, 800);
+        } else {
+            // --- ÉTAT : ERREUR ---
+            alert("Erreur : " + result.error);
+            btn.disabled = false;
+            icon.className = originalIconClass;
+        }
+    } catch (err) {
+        console.error("Erreur inscription :", err);
+        btn.disabled = false;
+        icon.className = originalIconClass;
     }
 });
-
 
 function onGoogleSuccess(response) {
     // On envoie le jeton reçu de Google à notre backend

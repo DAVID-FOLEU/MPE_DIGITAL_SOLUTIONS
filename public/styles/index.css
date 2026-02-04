@@ -5,6 +5,11 @@
     visibility: hidden;
 }
 
+#logoutBtn:hover{
+    color:white !important;
+    background: red !important;
+}
+
 .btn.profil div {
     background: linear-gradient(135deg, #2c64e3, #078251) !important; /* On garde tes couleurs */
     transition: transform 0.2s ease;

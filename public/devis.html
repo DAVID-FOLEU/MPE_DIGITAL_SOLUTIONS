@@ -63,33 +63,33 @@
             }
         
          /* Cache tout le corps de la page par défaut */
-            body { display: none; }
+            /* body { display: none; } */
 
     </style>
 
 
 <script>
-    (function protectPage() {
-        const userData = localStorage.getItem('user');
+    // (function protectPage() {
+    //     const userData = localStorage.getItem('user');
         
-        if (userData) {
-            // ✅ UTILISATEUR CONNECTÉ
-            console.log("Accès autorisé");
+    //     if (userData) {
+    //         // ✅ UTILISATEUR CONNECTÉ
+    //         console.log("Accès autorisé");
             
-            // On attend que le DOM soit chargé pour afficher le body
-            document.addEventListener("DOMContentLoaded", function() {
-                document.body.style.display = "block";
+    //         // On attend que le DOM soit chargé pour afficher le body
+    //         document.addEventListener("DOMContentLoaded", function() {
+    //             document.body.style.display = "block";
                 
-                // Optionnel : Afficher le prénom si tu as un élément avec l'id 'userName'
-                // const user = JSON.parse(userData);
-                // const nameElement = document.getElementById('userName');
-                // if (nameElement) nameElement.innerText = user.firstname;
-            });
-        } else {
-            // ❌ PAS CONNECTÉ
-            window.location.href = "devis-login.html";
-        }
-    })();
+    //             // Optionnel : Afficher le prénom si tu as un élément avec l'id 'userName'
+    //             // const user = JSON.parse(userData);
+    //             // const nameElement = document.getElementById('userName');
+    //             // if (nameElement) nameElement.innerText = user.firstname;
+    //         });
+    //     } else {
+    //         // ❌ PAS CONNECTÉ
+    //         window.location.href = "devis-login.html";
+    //     }
+    // })();
 </script>
 
    
@@ -185,10 +185,10 @@
 
             <div class="position-absolute top-0 start-0 w-100 h-100" style="background: url('https://www.transparenttextures.com/patterns/cubes.png'); opacity: 0.1;"></div>
           
-            <div class="container position-relative z-3 h-100 d-flex align-items-center">
-                <div class="row w-100 align-items-center g-5">
+            <div class="container position-relative z-3 h-100 d-flex justify-content-center align-items-center">
+                <div class="row w-100  justify-content-center align-items-center g-5">
                     
-                    <div class="col-12 col-lg-7 text-center text-lg-start">
+                    <div class="col-12 col-lg-7 w-100 text-center text-lg-start">
                         
                         <div class="animate-fadeInUp">
                             

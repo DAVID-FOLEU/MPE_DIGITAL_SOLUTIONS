@@ -36,7 +36,8 @@ const solution = [
     },
     {
         id: 4,
-        img: "https://images.unsplash.com/photo-1571721738239-743c94bb4726?q=80&w=1080&auto=format&fit=crop",
+        // Image de statistiques/SEO pour la "Visibilité"
+        img: "https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?q=80&w=1080&auto=format&fit=crop",
         titre: "VISIBILITÉ",
         badge: "Visibilité & Référencement",
         bg: "bg-primary",
@@ -44,7 +45,8 @@ const solution = [
     },
     {
         id: 5,
-        img: "https://images.unsplash.com/photo-1586717791821-3f44a563eb4c?q=80&w=1080&auto=format&fit=crop",
+        // Image d'interface mobile/Design épuré pour "Design & UX"
+        img: "https://images.unsplash.com/photo-1559028012-481c04fa702d?q=80&w=1080&auto=format&fit=crop",
         titre: "DESIGN & UX",
         badge: "Design & UX",
         bg: "bg-warning",
@@ -511,6 +513,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
     const backToTopBtn = document.getElementById('backToTop');
+    
+    // Sécurité : on vérifie si le bouton existe vraiment
+    if (!backToTopBtn) {
+        console.warn("Le bouton #backToTop n'a pas été trouvé dans le DOM.");
+        return; 
+    }
 
     // Surveiller le défilement de la page
     window.addEventListener('scroll', function() {
