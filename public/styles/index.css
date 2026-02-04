@@ -5,6 +5,19 @@
     visibility: hidden;
 }
 
+#backToTop {
+    transform: translateY(20px); /* Petit effet de glissement */
+    display: flex !important;    /* On force le display flex pour le centrage de l'icône */
+    align-items: center;
+    justify-content: center;
+}
+
+#backToTop.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0);
+}
+
 #logoutBtn:hover{
     color:white !important;
     background: red !important;
