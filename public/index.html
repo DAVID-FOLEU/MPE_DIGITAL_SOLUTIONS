@@ -34,13 +34,27 @@
             if (userData) {
                 const user = JSON.parse(userData);
                 const initiale = user.lastname.charAt(0).toUpperCase() + user.firstname.charAt(0).toUpperCase() ;
+               
+               // On cible l'icône <i> à l'intérieur du bouton
+            const icon = userBtn.querySelector('i');
 
-              // On injecte l'initiale qui va prendre 100% de la place du bouton parent
-                userBtn.innerHTML = `
-                    <div class="bg-transparent text-white w-100 h-100 d-flex align-items-center justify-content-center fw-bold" 
-                        style="font-size: 1.2rem; min-width: 35px; min-height: 35px;">
-                        ${initiale}
-                    </div>`; 
+                if (icon) {
+        // On crée un élément pour l'initiale
+        const initialSpan = document.createElement('span');
+        
+        // On applique les styles pour que ça ressemble à un petit avatar rond ou carré
+        initialSpan.className = "d-inline-flex align-items-center justify-content-center fw-bold text-white";
+        initialSpan.style.width = "35px";
+        initialSpan.style.height = "35px";
+        initialSpan.style.fontSize = "0.9rem";
+        // initialSpan.style.background = "rgba(255, 255, 255, 0.2)"; // Fond léger
+        // initialSpan.style.borderRadius = "8px"; // Ou 50% pour un cercle
+        
+        initialSpan.textContent = initiale;
+
+        // REMPLACEMENT : On remplace l'icône par le nouveau span
+        icon.replaceWith(initialSpan);
+    }
                 // 2. On modifie le contenu du menu déroulant
                 dropdownMenu.innerHTML = `
                     <li><div class="dropdown-header fw-bold text-dark border-bottom mb-2">${user.firstname} ${user.lastname}</div></li>
