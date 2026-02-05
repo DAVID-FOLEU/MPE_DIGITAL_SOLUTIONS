@@ -6,8 +6,17 @@
 }
 
 #backToTop {
-    transform: translateY(20px); /* Petit effet de glissement */
-    display: flex !important;    /* On force le display flex pour le centrage de l'icône */
+    position:sticky;
+    bottom:10px;
+    right:10px;
+    /* État de base (Caché) */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    
+    /* Centrage de l'icône */
+    display: flex !important;
     align-items: center;
     justify-content: center;
 }
@@ -16,6 +25,7 @@
     opacity: 1 !important;
     visibility: visible !important;
     transform: translateY(0);
+    z-index:1000000 !important;
 }
 
 #logoutBtn:hover{

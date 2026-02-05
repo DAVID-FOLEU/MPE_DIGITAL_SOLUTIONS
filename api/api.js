@@ -19,6 +19,23 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
+// --- MIDDLEWARE D'AUTHENTIFICATION ---
+// Ce middleware extrait l'ID de l'utilisateur depuis le cookie 'token'
+const authenticateToken = (req, res, next) => {
+    const token = req.cookies.token; // Lecture du cookie
+
+    if (!token) {
+        return res.status(401).json({ error: "Veuillez vous connecter pour envoyer un devis." });
+    }
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) return res.status(403).json({ error: "Session expirée, reconnectez-vous." });
+        req.user = user; // Contient l'ID, le rôle, etc.
+        next();
+    });
+};
+
+
 // --- 1. CONFIGURATION DU POOL AIVEN ---
 const pool = mysql.createPool({
     uri: process.env.DATABASE_URL,
@@ -41,23 +58,49 @@ pool.getConnection((err, connection) => {
     //     else console.log("🗑️ Table 'users' supprimée avec succès. Elle va être recréée proprement.");
     // });
 
-    const sqlTable = `CREATE TABLE IF NOT EXISTS users (
+    const sqlTable = `
+    CREATE TABLE IF NOT EXISTS devis (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        firstname VARCHAR(100),
-        lastname VARCHAR(100),
-        email VARCHAR(100) UNIQUE,
-        password VARCHAR(255),
-        profile_pic TEXT,
-        role ENUM('user', 'admin', 'agent') DEFAULT 'user',
-        otp_code VARCHAR(6),
-        is_verified BOOLEAN DEFAULT false,
-        is_online BOOLEAN DEFAULT false
-    )`;
+        reference_unique VARCHAR(50) UNIQUE NOT NULL,
+        
+        -- IDs de liaison
+        user_id INT NULL,      -- Le client (provenant de la table users)
+        agent_id INT NULL,     -- L'agent (provenant aussi de la table users)
+        
+        -- Infos Client (pour historique si le profil user change)
+        client_nom VARCHAR(100) NOT NULL,
+        client_email VARCHAR(100) NOT NULL,
+        entreprise VARCHAR(100),
+        telephone VARCHAR(25),
+        projet_description TEXT NOT NULL,
+        date_demarrage DATE,
+        duree_estimee VARCHAR(50),
+        type_service VARCHAR(50),
+        perimetre VARCHAR(50),
+        references_exemples TEXT,
+        
+        -- Options et Fichiers
+        mobile_ready BOOLEAN DEFAULT TRUE,
+        couleurs_logo BOOLEAN DEFAULT TRUE,
+        fichiers_joints JSON, 
+    
+        -- Suivi
+        statut ENUM('en attente', 'payer', 'signé') DEFAULT 'en attente',
+        derniere_modif_par VARCHAR(100),
+        
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+        -- Déclaration des relations
+        CONSTRAINT fk_client FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+        CONSTRAINT fk_agent FOREIGN KEY (agent_id) REFERENCES users(id) ON DELETE SET NULL
+    );
+`;
 
     connection.query(sqlTable, (errQuery) => {
         connection.release();
         if (errQuery) console.error("❌ Erreur Table :", errQuery.message);
-        else console.log("✅ Table 'users' prête.");
+        else console.log("✅ Table 'users' et 'devis' prêtent.");
     });
 });
 
@@ -330,6 +373,41 @@ app.get('/api/me', (req, res) => {
         res.json({ loggedIn: true, user: decoded });
     });
 });
+
+// route pour devis
+
+app.post('/api/devis', authenticateToken, async (req, res) => {
+    try {
+        const data = req.body;
+        const userId = req.user.id; // Récupéré de manière sécurisée depuis le JWT
+
+        const ref = `DEV-${new Date().getFullYear()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+
+        const sql = `
+            INSERT INTO devis (
+                reference_unique, user_id, client_nom, client_email, entreprise, 
+                telephone, projet_description, date_demarrage, duree_estimee, 
+                type_service, perimetre, references_exemples, mobile_ready, 
+                couleurs_logo, statut, derniere_modif_par
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'en attente', 'Client')
+        `;
+
+        const values = [
+            ref, userId, data.nom, data.email, data.entreprise, 
+            data.tel, data.description, data.date_debut, data.duree, 
+            data.service, data.perimetre, data.liens, 
+            data.mobile_ready ? 1 : 0, data.logo_colors ? 1 : 0
+        ];
+
+        await db.execute(sql, values);
+        res.status(201).json({ success: true, reference: ref });
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+
 
 app.get('/api/logout', (req, res) => {
     res.clearCookie('token');

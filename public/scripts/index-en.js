@@ -12,51 +12,53 @@ window.addEventListener('scroll', function() {
 const solution = [
     {
         id: 1,
-        img: "https://www.mpedigitalsolutions.com/_next/image?url=%2Fimages%2FWordPressWebSite%2Fwordpress_img.jpg&w=1080&q=85",
-        titre: "PROFESSIONAL WEBSITES",
-        badge: "Web Development",
+        img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1080&auto=format&fit=crop",
+        titre: "SITES WEB PROFESSIONNELS",
+        badge: "Développement Web",
         bg: "bg-warning",
-        paragraphe: "Custom, fast, and high-performing websites that perfectly represent your business online."
+        paragraphe: "Sites web sur mesure, rapides et performants qui représentent parfaitement votre entreprise en ligne."
     },
     {
         id: 2,
-        img: "https://www.mpedigitalsolutions.com/_next/image?url=%2Fimages%2Fe-commerce%2Fecommerce_main_img_1.jpg&w=1080&q=85",
+        img: "https://images.unsplash.com/photo-1556742044-3c52d6e88c62?q=80&w=1080&auto=format&fit=crop",
         titre: "E-COMMERCE",
         badge: "E-commerce",
         bg: "bg-primary",
-        paragraphe: "Secure and optimized online stores designed to maximize your sales and grow your business."
+        paragraphe: "Boutique en ligne sécurisée et optimisées pour maximiser vos ventes et développer votre activité."
     },
     {
         id: 3,
-        img: "https://www.mpedigitalsolutions.com/_next/image?url=%2Fimages%2FMarketingDigital%2Fmarketing_digital_main_1.jpg&w=1080&q=85",
-        titre: "DIGITAL MARKETING",
-        badge: "Digital Marketing",
+        img: "https://images.unsplash.com/photo-1533750349088-cd871a92f312?q=80&w=1080&auto=format&fit=crop",
+        titre: "MARKETING DIGITAL",
+        badge: "Marketing Digital",
         bg: "bg-warning",
-        paragraphe: "Powerful digital marketing strategies to attract more customers and boost your visibility."
+        paragraphe: "Stratégies marketing digitales performantes pour attirer plus de clients et augmenter votre visibilité."
     },
     {
         id: 4,
-        img: "https://www.mpedigitalsolutions.com/_next/image?url=%2Fimages%2Fseo-sea%2Fseo%2Fseo_img_1.avif&w=1080&q=85",
-        titre: "VISIBILITY",
-        badge: "Visibility & SEO",
+        // Image de statistiques/SEO pour la "Visibilité"
+        img: "https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?q=80&w=1080&auto=format&fit=crop",
+        titre: "VISIBILITÉ",
+        badge: "Visibilité & Référencement",
         bg: "bg-primary",
-        paragraphe: "Optimize your presence on Google and search engines to be easily found by your clients."
+        paragraphe: "Optimisez votre présence sur Google et les moteurs de recherche pour être trouvé par vos clients."
     },
     {
         id: 5,
-        img: "https://www.mpedigitalsolutions.com/_next/image?url=%2Fimages%2Fui-ux%2Fui-ux_img_1.jpeg&w=1080&q=85",
+        // Image d'interface mobile/Design épuré pour "Design & UX"
+        img: "https://images.unsplash.com/photo-1559028012-481c04fa702d?q=80&w=1080&auto=format&fit=crop",
         titre: "DESIGN & UX",
         badge: "Design & UX",
         bg: "bg-warning",
-        paragraphe: "Modern and intuitive interfaces that offer an exceptional user experience and increase conversions."
+        paragraphe: "Interfaces modernes et intuitives qui offrent une expérience utilisateur exceptionnelle et augmentent les conversions."
     },
     {
         id: 6,
-        img: "https://www.mpedigitalsolutions.com/_next/image?url=%2Fimages%2FMaintenancedeSiteWeb%2Fsoftware_maintenance_hero.jpeg&w=1080&q=85",
-        titre: "MOBILE APPLICATIONS",
-        badge: "Mobile Apps",
+        img: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=1080&auto=format&fit=crop",
+        titre: "APPLICATIONS MOBILES",
+        badge: "Applications mobiles",
         bg: "bg-primary",
-        paragraphe: "Native and cross-platform mobile applications for iOS and Android that perfectly represent your company."
+        paragraphe: "Applications mobiles natives et multiplateformes pour iOS et Android qui représentent parfaitement votre entreprise."
     }
 ];
 
@@ -514,14 +516,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Surveiller le défilement de la page
     window.addEventListener('scroll', function() {
-        if (window.pageYOffset > 300) {
-            // Affiche le bouton après 300px de défilement
-            backToTopBtn.classList.add('show');
-        } else {
-            // Cache le bouton
-            backToTopBtn.classList.remove('show');
-        }
-    });
+    // Détection universelle (compatible tous navigateurs)
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+    if (scrollTop > 300) {
+        backToTopBtn.classList.add('show');
+    } else {
+        backToTopBtn.classList.remove('show');
+    }
+});
 
     // Action de clic pour remonter
     backToTopBtn.addEventListener('click', function() {

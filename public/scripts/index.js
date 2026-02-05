@@ -513,30 +513,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
     const backToTopBtn = document.getElementById('backToTop');
-    
-    // Sécurité : on vérifie si le bouton existe vraiment
-    if (!backToTopBtn) {
-        console.warn("Le bouton #backToTop n'a pas été trouvé dans le DOM.");
-        return; 
-    }
+    if (!backToTopBtn) return;
 
-    // Surveiller le défilement de la page
-    window.addEventListener('scroll', function() {
-        if (window.pageYOffset > 300) {
-            // Affiche le bouton après 300px de défilement
+    const toggleBackToTop = () => {
+        // On récupère la position actuelle du scroll (compatible tous navigateurs)
+        const scrolled = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (scrolled > 300) {
             backToTopBtn.classList.add('show');
         } else {
-            // Cache le bouton
             backToTopBtn.classList.remove('show');
         }
-});
+    };
 
+    // On écoute le scroll
+    window.addEventListener('scroll', toggleBackToTop);
 
-    // Action de clic pour remonter
+    // Action de clic
     backToTopBtn.addEventListener('click', function() {
         window.scrollTo({
             top: 0,
-            behavior: 'smooth' // Défilement fluide
+            behavior: 'smooth'
         });
     });
 });
