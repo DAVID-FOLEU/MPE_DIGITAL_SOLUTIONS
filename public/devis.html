@@ -92,23 +92,39 @@
 
 
 <script>
-    (function protectPage() {
-        const userData = localStorage.getItem('user');
-        
-        if (userData) {
-            // ✅ UTILISATEUR CONNECTÉ
-            console.log("Accès autorisé");
-            
-            // On attend que le DOM soit chargé pour afficher le body
-            document.addEventListener("DOMContentLoaded", function() {
-                document.body.style.display = "block";
-                
-               });
-        } else {
-            // ❌ PAS CONNECTÉ
-            window.location.href = "devis-register.html";
-        }
-    })();
+    
+   (function protectPage() {
+    const userData = localStorage.getItem('user');
+    
+    if (userData) {
+        console.log("Accès autorisé");
+        const user = JSON.parse(userData); // On transforme la chaîne en objet JS
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // 1. Afficher la page
+            document.body.style.display = "block";
+
+            // 2. Pré-remplissage des champs
+            // On utilise les sélecteurs correspondant à ton formulaire
+            const inputNom = document.querySelector('input[placeholder="Votre nom complet"]');
+            const inputEmail = document.querySelector('input[type="email"]');
+
+            if (inputNom && user.firstname && user.lastname) {
+                inputNom.value = `${user.firstname} ${user.lastname}`;
+                // Optionnel : mettre en lecture seule pour éviter les erreurs d'ID
+                // inputNom.readOnly = true; 
+            }
+
+            if (inputEmail && user.email) {
+                inputEmail.value = user.email;
+                // inputEmail.readOnly = true;
+            }
+        });
+    } else {
+        window.location.href = "devis-register.html";
+    }
+})();
+
 </script>
 
    
