@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/logo.avif" sizes="any">
+    <link rel="icon" href="images/logo.avif"  sizes="16x16">
+    <link rel="icon" href="images/logo.avif" sizes="32x32">
+    <title>
+       Réinisialisation du mot de passe
+    </title>
+    <meta name="description" content="Nous créons des sites web, applications mobiles et expériences digitales exceptionnelles qui génèrent des résultats.">
+    <meta name="author" content="MPE Digital Solutions">
+    <meta name="keywords" content="web development,mobile app development,digital marketing,SEO services,e-commerce solutions,UI/UX design,web design,digital agency,website development,online marketing">
+    <meta name="creator" content="MPE Digital Solutions">
+    <meta name="publisher" content="MPE DIGITAL SOLUTIONS">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <link rel="stylesheet" href="styles/index.css">
+    <style>
+        :root {
+            /* Palette MPE Digital */
+            --primary: #2c64e3;
+            --primary-dark: #1a4bbd;
+            --success: #00b894;
+            --danger: #ff7675;
+            --warning: #fdcb6e;
+            --gray: #6c757d;
+            --dark-bg: #1a1a1a;
+            --card-bg: #242424;
+            --input-bg: #2d2d2d;
+            --text-main: #ffffff;
+            --text-muted: #ffffff;
+        }
+    
+        main {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--dark-bg);
+            background: radial-gradient(circle at top right, #2c64e3, #1a1a1a 50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-main);
+        }
+    
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            padding: 2.5rem;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 420px;
+        }
+    
+        h2 {
+            margin: 0 0 10px 0;
+            color: var(--text-main);
+            text-align: center;
+            font-weight: 700;
+        }
+    
+        p.subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+    
+        .input-group {
+            margin-bottom: 1.2rem;
+        }
+    
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+    
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+    
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            padding-right: 45px;
+            background-color: var(--input-bg);
+            border: 2px solid #3d3d3d;
+            border-radius: 10px;
+            font-size: 1rem;
+            color: white;
+            transition: all 0.3s;
+        }
+    
+        input:focus {
+            border-color: var(--primary);
+            background-color: #333;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(44, 100, 227, 0.15);
+        }
+    
+        input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            cursor: pointer;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            transition: color 0.2s;
+        }
+    
+        .toggle-password:hover {
+            color: var(--primary);
+        }
+    
+        /* Barre de force */
+        .strength-meter {
+            height: 6px;
+            background-color: #3d3d3d;
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+    
+        #strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.4s;
+        }
+    
+        #strength-text {
+            font-size: 0.7rem;
+            margin: 8px 0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    
+        /* Liste des critères */
+        .requirements-list {
+            list-style: none;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 0.85rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+    
+        .requirements-list li {
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s;
+        }
+    
+        .requirements-list li:last-child {
+            margin-bottom: 0;
+        }
+    
+        .requirements-list li.valid {
+            color: var(--success);
+        }
+    
+        .requirements-list li::before {
+            content: "○";
+            margin-right: 10px;
+            font-weight: bold;
+        }
+    
+        .requirements-list li.valid::before {
+            content: "✓";
+        }
+    
+        /* Bouton */
+        .btn-reset {
+            width: 100%;
+            padding: 14px;
+            background:  linear-gradient(135deg, #2c64e3, #078251); border: none;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(44, 100, 227, 0.3);
+        }
+    
+        .btn-reset:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44, 100, 227, 0.4);
+        }
+    
+        .btn-reset:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        /* État Chargement (Cercle) */
+.btn-submit.loading {
+    color: transparent; /* Cache le texte */
+}
+
+/* Animation de rotation pour l'icône */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+    
+        
+    </style>
+</head>
+<body>
+<main class="px-2 py-5">
+    <div class="card">
+        <h2>Nouveau mot de passe</h2>
+        <p class="subtitle">Sécurisez votre compte avec un mot de passe robuste.</p>
+
+        <form id="resetForm">
+            <div class="input-group d-flex flex-column">
+                <label for="new-password">Nouveau mot de passe</label>
+                <div class="password-wrapper">
+                    <input type="password" id="new-password" class="form-control bg-transparent border-secondary text-white shadow-none ps-0"  placeholder="••••••••" required>
+                    <span class="toggle-password" onclick="toggleMdp('new-password', this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </span>
+                </div>
+                
+                <div class="strength-meter">
+                    <div id="strength-bar"></div>
+                </div>
+                <p id="strength-text">Force : Vide</p>
+            </div>
+
+            <ul class="requirements-list">
+                <li id="length">8 caractères minimum</li>
+                <li id="uppercase">Une majuscule</li>
+                <li id="number">Un chiffre</li>
+                <li id="special">Un caractère spécial (@$!%*?&)</li>
+            </ul>
+
+            <div class="input-group d-flex flex-column">
+                <label for="confirm-password">Confirmez le mot de passe</label>
+                <div class="password-wrapper">
+                    <input type="password" id="confirm-password" class="form-control bg-transparent border-secondary text-white shadow-none ps-0" placeholder="••••••••" required disabled>
+                    
+                </div>
+            </div>
+
+            <button type="submit" id="submit-btn" class="btn btn-reset" disabled>Mettre à jour</button>
+        </form>
+    </div>
+
+</main>
+
+    <footer class="footer-modern position-relative overflow-hidden reveal-section-bottom  text-light">
+        <div class="footer-top-border"></div>
+    
+        <div class="footer-bg-effects position-absolute inset-0">
+            <div class="blob blob-center"></div>
+            <div class="blob blob-top-right"></div>
+            <div class="blob blob-bottom-left"></div>
+        </div>
+    
+        <div class="container position-relative z-1 py-5">
+            <section class="row gy-5 mb-5 border-bottom border-secondary pb-5">
+                <div class="col-12 col-lg-6">
+                    <a class="d-inline-block mb-3 text-decoration-none" href="/fr">
+                        <h2 class="h3 fw-bold text-white mb-0">MPE DIGITAL SOLUTIONS</h2>
+                    </a>
+                    <p class="text-white small max-w-md">
+                        Agence digitale de classe mondiale offrant des résultats exceptionnels
+                    </p>
+                    <div class="d-flex flex-wrap gap-2 mt-4 small text-primary">
+                        <span>Afrique</span><span>•</span>
+                        <span>Europe</span><span>•</span>
+                        <span>Asie</span><span>•</span>
+                        <span>Amérique du Sud</span><span>•</span>
+                        <span>Amérique du Nord</span>
+                    </div>
+                </div>
+    
+                <div class="col-12 col-lg-6">
+                    <div class="newsletter-card p-4 rounded-4 bg-dark-subtle">
+                        <h4 class="h6 fw-bold text-white mb-2">Votre Newsletter</h4>
+                        <p class="small text-white mb-4">
+                            Inscrivez-vous à notre newsletter pour rester informé(e) des dernières tendances...
+                        </p>
+                        <form class="row g-2">
+                            <div class="col-12 col-sm">
+                                <input type="email" class="form-control form-control-dark" placeholder="E-mail" required>
+                            </div>
+                            <div class="col-12 col-sm-auto">
+                                <button class="btn btn-primary px-4 w-100" type="submit">S'inscrire</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+    
+            <section class="row gy-4 mb-5">
+                <div class="col-6 col-md-4">
+                    <h4 class="h6 fw-bold text-white mb-4">Nos Services</h4>
+                    <ul class="list-unstyled d-grid gap-2">
+                        <li><a href="/fr/services" class=" text-decoration-none hover-white">Web Development</a></li>
+                        <li><a href="/fr/services/hosting" class=" text-decoration-none hover-white">Hebergement Web</a></li>
+                        <li><a href="/fr/services/project-management" class=" text-decoration-none hover-white">Product Management</a></li>
+                        <li><a href="/fr/services/digital-marketing" class=" text-decoration-none hover-white">Marketing</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-6 col-md-4">
+                    <h4 class="h6 fw-bold text-white mb-4">Légal</h4>
+                    <ul class="list-unstyled d-grid gap-2">
+                        <li><a href="/fr/privacy" class=" text-decoration-none hover-white">Politique de Confidentialité</a></li>
+                        <li><a href="/fr/terms" class=" text-decoration-none hover-white">Conditions d'Utilisation</a></li>
+                    </ul>
+                </div>
+    
+                <div class="col-12 col-md-4">
+                    <h4 class="h6 fw-bold text-white mb-4">Contacts</h4>
+                    <ul class="list-unstyled d-flex flex-column gap-3 small text-secondary">
+                        <li>
+                            <p class="text-white fw-medium mb-1" style="font-size: 0.75rem;">E-mail</p>
+                            <a href="mailto:contact@mpedigitalsolutions.com" class="text-secondary text-decoration-none text-hover-white transition">
+                                contact@mpedigitalsolutions.com
+                            </a>
+                        </li>
+                    
+                        <li>
+                            <div class="mb-2">
+                                <p class="text-white fw-medium mb-1" style="font-size: 0.75rem;">Yaoundé</p>
+                                <p class="mb-1 " style="font-size: 0.75rem;">Nkoabang – Entrée Carrière (Yaoundé)</p>
+                                <div class="d-flex flex-wrap gap-2 mt-1">
+                                    <a href="https://wa.me/237640465182" class="d-flex align-items-center gap-1 text-decoration-none text-secondary text-hover-white transition" target="_blank">
+                                        <i class="bi bi-whatsapp" style="color:#25D366"></i><span>640 46 51 82</span>
+                                    </a>
+                                    <a href="https://wa.me/237652799181" class="d-flex align-items-center gap-1 text-decoration-none text-secondary text-hover-white transition" target="_blank">
+                                        <i class="bi bi-whatsapp" style="color:#25D366"></i><span>652 79 91 81</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    
+                        <li>
+                            <div class="mb-2">
+                                <p class="text-white fw-medium mb-1" style="font-size: 0.75rem;">Douala</p>
+                                <p class="mb-1 " style="font-size: 0.75rem;">Cité des palmiers</p>
+                                <div class="d-flex flex-wrap gap-2 mt-1">
+                                    <a href="https://wa.me/237657128712" class="d-flex align-items-center gap-1 text-decoration-none text-secondary text-hover-white transition" target="_blank">
+                                        <i class="bi bi-whatsapp" style="color:#25D366"></i><span>657 12 87 12</span>
+                                    </a>
+                                    <a href="https://wa.me/237673071017" class="d-flex align-items-center gap-1 text-decoration-none text-secondary text-hover-white transition" target="_blank">
+                                        <i class="bi bi-whatsapp" style="color:#25D366"></i><span>673 07 10 17</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    
+                        <li>
+                            <div class="mb-2">
+                                <p class="text-white fw-medium mb-1" style="font-size: 0.75rem;">France</p>
+                                <p class="mb-1 " style="font-size: 0.75rem;">91096, Paris, France</p>
+                                <div class="d-flex flex-wrap gap-2 mt-1">
+                                    <a href="https://wa.me/33638055446" class="d-flex align-items-center gap-1 text-decoration-none text-secondary text-hover-white transition" target="_blank">
+                                        <i class="bi bi-whatsapp" style="color:#25D366"></i><span>+33 6 38 05 54 46</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    
+                        <li class="d-flex align-items-center gap-2 text-secondary">
+                            <i class="bi bi-clock" style="color:#25D366"></i>
+                            <span>Lundi - Dimanche: 08h - 20h</span>
+                        </li>
+                    
+                        <li>
+                            <a class="d-flex align-items-center gap-2 text-decoration-none transition" href="/fr/contact">
+                                <i class="bi bi-chat-dots" style="color:#25D366"></i>
+                                <span class="fw-bold" style="color:#fe4438;">Start project →</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+    
+            <div class="border-top border-secondary pt-4">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 small text-white mb-4">
+                    <p class="mb-0">© Copyright MPE DIGITAL SOLUTIONS. All Rights Reserved</p>
+                    <p class="mb-0">Designed by MDS support</p>
+                </div>
+                
+                <!-- <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-3 pt-4 border-top border-secondary border-opacity-25">
+                    <span class="small text-muted fw-medium">Schéma de Couleurs:</span>
+                    <button class="btn btn-outline-secondary btn-sm d-flex justify-content-between align-items-center gap-3 px-3 py-2" style="min-width: 120px;">
+                        <span>Tech</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                </div> -->
+            </div>
+        </div>
+    
+</footer>    
+
+</body>
+</html>
+
+<script>
+    const passwordInput = document.getElementById('new-password');
+    const confirmInput = document.getElementById('confirm-password');
+    const strengthBar = document.getElementById('strength-bar');
+    const strengthText = document.getElementById('strength-text');
+    const submitBtn = document.getElementById('submit-btn');
+
+    // Toggle visibilité
+    function toggleMdp(id, el) {
+        const input = document.getElementById(id);
+        const isPassword = input.type === "password";
+        input.type = isPassword ? "text" : "password";
+        // Correction de la couleur (statique si tes variables CSS ne sont pas définies)
+        el.style.color = isPassword ? "#2c64e3" : "#6c757d";
+    }
+
+    // Configuration des critères
+    const criteria = {
+        length: val => val.length >= 8,
+        uppercase: val => /[A-Z]/.test(val),
+        number: val => /[0-9]/.test(val),
+        special: val => /[@$!%*?&]/.test(val)
+    };
+
+    function updateUI() {
+        const val = passwordInput.value;
+        const confirmVal = confirmInput.value;
+        let score = 0;
+
+        // Vérifier chaque critère
+        Object.keys(criteria).forEach(key => {
+            const isValid = criteria[key](val);
+            const element = document.getElementById(key);
+            if (element) {
+                if (isValid) {
+                    element.classList.add('valid');
+                    element.style.color = "#00b894"; // Vert
+                    score++;
+                } else {
+                    element.classList.remove('valid');
+                    element.style.color = "#6c757d"; // Gris
+                }
+            }
+        });
+
+        // Couleurs et labels
+        const config = [
+            { color: '#dfe6e9', label: 'Vide' },
+            { color: '#ff7675', label: 'Très faible' },
+            { color: '#fdcb6e', label: 'Faible' },
+            { color: '#55efc4', label: 'Bon' },
+            { color: '#00b894', label: 'Excellent' }
+        ];
+
+        strengthBar.style.width = (score / 4) * 100 + '%';
+        strengthBar.style.backgroundColor = config[score].color;
+        strengthText.innerText = "Force : " + config[score].label;
+        strengthText.style.color = config[score].color;
+
+        // Logique de blocage
+        // Le champ confirmation s'active seulement si le MDP est "Excellent" (score 4)
+        confirmInput.disabled = score < 4;
+        
+        // Le bouton s'active si score max ET les mots de passe sont identiques
+        const passwordsMatch = val === confirmVal && val !== "";
+        submitBtn.disabled = score < 4 || !passwordsMatch;
+        
+        // Petit feedback visuel sur la bordure de confirmation
+        if (confirmVal !== "") {
+            confirmInput.style.borderColor = passwordsMatch ? "#00b894" : "#ff7675";
+        }
+    }
+
+    passwordInput.addEventListener('input', updateUI);
+    confirmInput.addEventListener('input', updateUI);
+
+    // annimer le bouton de validation
+    document.getElementById('resetForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // On sélectionne le bouton via sa classe
+    const btn = document.querySelector('.btn-reset');
+    const email = localStorage.getItem('resetEmail');
+    const newPassword = document.getElementById('new-password').value; // Vérifie que l'ID est correct
+
+    // Si on est déjà en cours de chargement, on stoppe
+    if (btn.classList.contains('loading')) return;
+
+    if (!email) {
+        alert("Erreur : Email introuvable. Recommencez la procédure.");
+        window.location.href = "forgotDevis-password.html";
+        return;
+    }
+
+    // --- ÉTAT : CHARGEMENT ---
+    const originalContent = btn.innerHTML;
+    btn.classList.add('loading');
+    btn.disabled = true; // Empêche le double clic
+    btn.innerHTML = '<i class="bi bi-arrow-repeat spinner fs-5"></i>';
+
+    try {
+        const response = await fetch('/api/update-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, newPassword })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // --- ÉTAT : SUCCÈS ---
+            btn.classList.remove('loading');
+             btn.innerHTML = '<i class="bi bi-check-lg fs-4 text-white"></i>';
+
+            // On attend un peu pour que l'utilisateur voie l'icône de succès
+            setTimeout(() => {
+                alert("Succès ! Votre mot de passe a été mis à jour.");
+                localStorage.removeItem('resetEmail');
+                window.location.href = "devis-login.html";
+            }, 600);
+
+        } else {
+            // --- ÉTAT : ERREUR SERVEUR ---
+            alert("Erreur : " + data.error);
+            btn.classList.remove('loading');
+            btn.disabled = false;
+            btn.innerHTML = originalContent;
+        }
+    } catch (error) {
+        // --- ÉTAT : ERREUR RÉSEAU ---
+        console.error("Erreur réseau :", error);
+        alert("Impossible de contacter le serveur.");
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        btn.innerHTML = originalContent;
+    }
+});
+</script>
+</body>
+</html>
