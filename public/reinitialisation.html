@@ -507,7 +507,7 @@
     // On sélectionne le bouton via sa classe
     const btn = document.querySelector('.btn-reset');
     const email = localStorage.getItem('resetEmail');
-    const newPassword = document.getElementById('passwordInput').value; // Vérifie que l'ID est correct
+    const newPassword = document.getElementById('new-password').value; // Vérifie que l'ID est correct
 
     // Si on est déjà en cours de chargement, on stoppe
     if (btn.classList.contains('loading')) return;
