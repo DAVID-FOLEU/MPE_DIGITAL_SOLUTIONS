@@ -560,7 +560,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
 
 function onGoogleSuccess(response) {
     // On envoie le jeton reçu de Google à notre backend
-    fetch('http://localhost:3001/auth/google', {
+    fetch('api/google', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idToken: response.credential })

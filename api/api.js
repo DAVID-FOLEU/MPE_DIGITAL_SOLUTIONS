@@ -53,10 +53,10 @@ pool.getConnection((err, connection) => {
     }
     console.log("✅ Connexion Aiven réussie !");
 
-    // connection.query("DROP TABLE IF EXISTS users", (err) => {
-    //     if (err) console.error("❌ Erreur lors de la suppression :", err.message);
-    //     else console.log("🗑️ Table 'users' supprimée avec succès. Elle va être recréée proprement.");
-    // });
+    connection.query("DROP TABLE IF EXISTS users", (err) => {
+        if (err) console.error("❌ Erreur lors de la suppression :", err.message);
+        else console.log("🗑️ Table 'users' supprimée avec succès. Elle va être recréée proprement.");
+    });
 
     const sqlTable = `
     CREATE TABLE IF NOT EXISTS devis (
@@ -169,7 +169,10 @@ app.post('/api/verify', (req, res) => {
 
         try {
             const token = jwt.sign(
-                { id: user.id, firstname: user.firstname, lastname: user.lastname, role: user.role },
+                { id: user.id,
+                 firstname: user.firstname,
+                 lastname: user.lastname,
+                 role: user.role },
                 JWT_SECRET,
                 { algorithm: 'HS256', expiresIn: '24h' }
             );
@@ -279,9 +282,10 @@ app.post('/api/login', (req, res) => {
             success: true,
             message: "Connexion réussie !", 
             user: { 
+                id: user.id,
+                role: user.role,
                 firstname: user.firstname, 
-                lastname: user.lastname, 
-                // role: user.role 
+                lastname: user.lastname 
             } 
         });
    
@@ -376,10 +380,14 @@ app.get('/api/me', (req, res) => {
 
 // route pour devis
 
-app.post('/api/devis', authenticateToken, async (req, res) => {
+app.post('/api/devis', async (req, res) => {
     try {
         const data = req.body;
-        const userId = req.user.id; // Récupéré de manière sécurisée depuis le JWT
+        const userId = data.userId; 
+
+        if (!userId) {
+            return res.status(400).json({ success: false, message: "ID utilisateur manquant" });
+        }
 
         const ref = `DEV-${new Date().getFullYear()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 

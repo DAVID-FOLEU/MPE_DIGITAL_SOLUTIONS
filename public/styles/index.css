@@ -5,27 +5,45 @@
     visibility: hidden;
 }
 
+#banner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* height: 100%; */
+    background: rgba(0, 0, 0, 0.3); /* Optionnel : assombrit légèrement le fond */
+    z-index: 1999; /* Juste en dessous de ta bannière (2000) */
+    display: block; /* Affiche l'overlay */
+    
+    /* Si tu veux que ce soit totalement invisible mais bloquant : */
+    /* background: transparent; */
+}
+
+
+
 #backToTop {
-    position:sticky;
-    bottom:10px;
-    right:10px;
+    /* Change position: sticky en fixed pour qu'il "flotte" sur l'écran */
+    position: fixed; 
+    bottom: 30px; /* Distance du bas */
+    right: 30px;  /* Distance de la droite */
+    
     /* État de base (Caché) */
     opacity: 0;
     visibility: hidden;
     transform: translateY(20px);
     transition: all 0.3s ease;
     
-    /* Centrage de l'icône */
+    /* Centrage et apparence */
     display: flex !important;
     align-items: center;
     justify-content: center;
+    z-index: 1000000 !important; /* Très haut pour être au-dessus de tout */
 }
 
 #backToTop.show {
     opacity: 1 !important;
     visibility: visible !important;
     transform: translateY(0);
-    z-index:1000000 !important;
 }
 
 #logoutBtn:hover{

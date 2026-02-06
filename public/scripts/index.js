@@ -168,11 +168,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, 10000); 
 
+
+    setTimeout(function() {
+        const sr = ScrollReveal();
+
+        sr.reveal('#banner-overlay', {
+            origin: 'top',      // Arrive du haut
+            distance: '50px',   // Glisse sur 50px
+            duration: 1000,     // Animation d'une seconde
+            opacity: 0,
+            easing: 'ease-out',
+            beforeReveal: (el) => {
+                el.style.visibility = 'visible';
+            }
+        });
+    }, 10000); 
+
     // Gestion du bouton de fermeture
     const closeBtn = document.querySelector('.btn-close-banner');
     if(closeBtn) {
         closeBtn.addEventListener('click', function() {
             document.getElementById('promo-banner').style.display = 'none';
+            document.getElementById('banner-overlay').style.display = 'none';
+      
         });
     }
 });
@@ -516,20 +534,18 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!backToTopBtn) return;
 
     const toggleBackToTop = () => {
-        // On récupère la position actuelle du scroll (compatible tous navigateurs)
-        const scrolled = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-        
-        if (scrolled > 300) {
+        // Seuil de 300px avant d'apparaître
+        if (window.scrollY > 300) {
             backToTopBtn.classList.add('show');
         } else {
             backToTopBtn.classList.remove('show');
         }
     };
 
-    // On écoute le scroll
+    // Écoute le scroll avec un petit délai pour la performance
     window.addEventListener('scroll', toggleBackToTop);
 
-    // Action de clic
+    // Retour en haut fluide
     backToTopBtn.addEventListener('click', function() {
         window.scrollTo({
             top: 0,

@@ -514,7 +514,7 @@
 
     if (!email) {
         alert("Erreur : Email introuvable. Recommencez la procédure.");
-        window.location.href = "forgot-password.html";
+        window.location.href = "forgotDevis-password.html";
         return;
     }
 
@@ -542,7 +542,7 @@
             setTimeout(() => {
                 alert("Succès ! Votre mot de passe a été mis à jour.");
                 localStorage.removeItem('resetEmail');
-                window.location.href = "login.html";
+                window.location.href = "devis-login.html";
             }, 600);
 
         } else {

@@ -459,9 +459,10 @@
             icon.className = 'bi bi-check-lg ms-2'; // Remplace le spinner par un check
             
             const userInfo = {
+                id: data.user.id,
+                role: data.user.role,
                 firstname: data.user.firstname,
-                lastname: data.user.lastname,
-                role: data.user.role
+                lastname: data.user.lastname
             };
 
             localStorage.setItem('user', JSON.stringify(userInfo));
