@@ -86,7 +86,7 @@
 }
 
          /* Cache tout le corps de la page par défaut */
-            /* body { display: none; } */
+            body { display: none; }
 
     </style>
 
@@ -509,16 +509,18 @@
                 // btn.style.backgroundColor = "#28a745";
                 btn.innerHTML = `Envoyé ! <i class="bi bi-check-circle-fill ms-2"></i>`;
     
-                // 3. FERMETURE OU REDIRECTION
+                // 3. FERMETURE ET REDIRECTION
                 setTimeout(() => {
+
+                // pour raffraichir la page parent
+
+                if (window.opener && !window.opener.closed) {
+                  window.opener.location.reload();
+                    }
+
                     // Tente de fermer l'onglet
                     window.close();
-    
-                    // Si la fenêtre est toujours ouverte (sécurité navigateur), on redirige
-                    // setTimeout(() => {
-                    //     window.location.href = "index.html";
-                    // }, 300);
-                }, 1500);
+                 }, 1500);
     
             } else {
                 const result = await response.json();
