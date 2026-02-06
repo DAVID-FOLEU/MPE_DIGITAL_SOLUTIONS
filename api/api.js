@@ -260,7 +260,12 @@ app.post('/api/login', (req, res) => {
 
         // 4. Créer le Token JWT
         const token = jwt.sign(
-            { id: user.id, role: user.role, firstname: user.firstname },
+            { id: user.id,
+              role: user.role, 
+              firstname: user.firstname,
+              lastname: user.lastname,
+              email: user.lastname
+             },
             process.env.JWT_SECRET || "MPE_DIGITAL_SECRET_KEY_2024",
             { expiresIn: '24h' }
         );
@@ -285,7 +290,8 @@ app.post('/api/login', (req, res) => {
                 id: user.id,
                 role: user.role,
                 firstname: user.firstname, 
-                lastname: user.lastname 
+                lastname: user.lastname ,
+                email: user.lastname
             } 
         });
    

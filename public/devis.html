@@ -92,7 +92,7 @@
 
 
 <script>
-    
+
    (function protectPage() {
     const userData = localStorage.getItem('user');
     
@@ -446,18 +446,16 @@
                 </div>
             </div>
         
-        
-           <div class="fixed-bottom d-flex justify-content-end p-3 p-sm-4 pb-4 pe-4" style="z-index: 9999; pointer-events: none;">
-    <button type="button" 
+        </footer>
+
+        <button type="button" 
             id="backToTop"
-            class="btn btn-primary rounded-circle shadow-lg" 
-            style="width: 50px; height: 50px; pointer-events: auto;"
+            class="btn btn-primary justify-content-center align-items-center unded-circle shadow-lg" 
             aria-label="Retour en haut">
-        <i class="bi bi-arrow-up fs-4"></i>
-    </button>
-</div>
+            <i class="bi bi-arrow-up fs-4"></i>
+        </button>
         
-    </footer>
+    
      <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
         
      <div id="google_translate_element" style="display:none;"></div>
@@ -532,6 +530,32 @@
             alert(error.message);
         }
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const backToTopBtn = document.getElementById('backToTop');
+    if (!backToTopBtn) return;
+
+    const toggleBackToTop = () => {
+        // Seuil de 300px avant d'apparaître
+        if (window.scrollY > 300) {
+            backToTopBtn.classList.add('show');
+        } else {
+            backToTopBtn.classList.remove('show');
+        }
+    };
+
+    // Écoute le scroll avec un petit délai pour la performance
+    window.addEventListener('scroll', toggleBackToTop);
+
+    // Retour en haut fluide
+    backToTopBtn.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+});
+
 
 </script>
 
