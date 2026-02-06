@@ -94,7 +94,7 @@ pool.getConnection((err, connection) => {
         -- Déclaration des relations
         CONSTRAINT fk_client FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
         CONSTRAINT fk_agent FOREIGN KEY (agent_id) REFERENCES users(id) ON DELETE SET NULL
-    );
+    )
 `;
 
     connection.query(sqlTable, (errQuery) => {
@@ -291,7 +291,7 @@ app.post('/api/login', (req, res) => {
                 role: user.role,
                 firstname: user.firstname, 
                 lastname: user.lastname ,
-                email: user.lastname
+                email: user.email
             } 
         });
    
@@ -427,7 +427,7 @@ app.post('/api/devis', async (req, res) => {
         ];
 
         // Utilisation de db.query ou db.execute
-        await db.execute(sql, values);
+        await pool.promise().execute(sql, values);
         
         res.status(201).json({ success: true, reference: ref });
 
@@ -443,21 +443,17 @@ app.post('/api/devis', async (req, res) => {
 
 app.get('/api/check-db', async (req, res) => {
     try {
-        // Cette requête liste toutes les tables de la base actuelle
-        const [rows] = await db.query("SHOW TABLES");
+        // ✅ Correction : on utilise pool.promise() au lieu de db
+        const [rows] = await pool.promise().query("SHOW TABLES");
         res.json({ 
             success: true, 
             message: "Connexion réussie", 
             tables: rows 
         });
     } catch (error) {
-        res.status(500).json({ 
-            success: false, 
-            error: error.message 
-        });
+        res.status(500).json({ success: false, error: error.message });
     }
 });
-
 
 // deconnxion
 app.get('/api/logout', (req, res) => {
