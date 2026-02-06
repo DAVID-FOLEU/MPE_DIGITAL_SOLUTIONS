@@ -211,20 +211,21 @@
         }
 
         /* État Chargement (Cercle) */
-.btn-submit.loading {
-    color: transparent; /* Cache le texte */
-}
+/* .btn-submit.loading {
+    color: transparent; /* Cache le texte 
+} */
 
 /* Animation de rotation pour l'icône */
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
 .spinner {
+    color:white;
+    display: inline-block;
     animation: spin 1s linear infinite;
-}
+    }
 
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    } 
     
         
     </style>
