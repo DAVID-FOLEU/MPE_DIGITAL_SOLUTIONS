@@ -53,13 +53,13 @@ pool.getConnection((err, connection) => {
     }
     console.log("✅ Connexion Aiven réussie !");
 
-    connection.query("DROP TABLE IF EXISTS users", (err) => {
+    connection.query("DROP TABLE IF EXISTS devis", (err) => {
         if (err) console.error("❌ Erreur lors de la suppression :", err.message);
         else console.log("🗑️ Table 'users' supprimée avec succès. Elle va être recréée proprement.");
     });
 
     const sqlTable = `
-    CREATE TABLE IF NOT EXISTS devis (
+    CREATE TABLE devis (
         id INT AUTO_INCREMENT PRIMARY KEY,
         reference_unique VARCHAR(50) UNIQUE NOT NULL,
         
@@ -389,6 +389,7 @@ app.post('/api/devis', async (req, res) => {
             return res.status(400).json({ success: false, message: "ID utilisateur manquant" });
         }
 
+        // Génération de la référence
         const ref = `DEV-${new Date().getFullYear()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 
         const sql = `
@@ -397,26 +398,62 @@ app.post('/api/devis', async (req, res) => {
                 telephone, projet_description, date_demarrage, duree_estimee, 
                 type_service, perimetre, references_exemples, mobile_ready, 
                 couleurs_logo, statut, derniere_modif_par
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'en attente', 'Client')
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         const values = [
-            ref, userId, data.nom, data.email, data.entreprise, 
-            data.tel, data.description, data.date_debut, data.duree, 
-            data.service, data.perimetre, data.liens, 
-            data.mobile_ready ? 1 : 0, data.logo_colors ? 1 : 0
+            ref,
+            userId,
+            data.nom || "Non renseigné",
+            data.email || "Non renseigné",
+            data.entreprise || null,
+            data.tel || null,
+            data.description || "Pas de description",
+            data.date_debut || null, // Si vide, MySQL accepte NULL pour une colonne DATE
+            data.duree || null,
+            data.service || null,
+            data.perimetre || null,
+            data.liens || null,
+            data.mobile_ready ? 1 : 0,
+            data.logo_colors ? 1 : 0,
+            'en attente', // Statut
+            'Client'      // derniere_modif_par
         ];
 
+        // Utilisation de db.query ou db.execute
         await db.execute(sql, values);
+        
         res.status(201).json({ success: true, reference: ref });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        console.error("ERREUR SERVEUR DEVIS:", error.message);
+        res.status(500).json({ 
+            success: false, 
+            message: "Erreur serveur lors de l'enregistrement",
+            error: error.message // Pour t'aider à debugger sur Vercel
+        });
+    }
+});
+
+app.get('/api/check-db', async (req, res) => {
+    try {
+        // Cette requête liste toutes les tables de la base actuelle
+        const [rows] = await db.query("SHOW TABLES");
+        res.json({ 
+            success: true, 
+            message: "Connexion réussie", 
+            tables: rows 
+        });
+    } catch (error) {
+        res.status(500).json({ 
+            success: false, 
+            error: error.message 
+        });
     }
 });
 
 
-
+// deconnxion
 app.get('/api/logout', (req, res) => {
     res.clearCookie('token');
     res.json({ message: "Déconnecté" });
