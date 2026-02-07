@@ -53,10 +53,10 @@ pool.getConnection((err, connection) => {
     }
     console.log("✅ Connexion Aiven réussie !");
 
-    connection.query("DROP TABLE IF EXISTS devis", (err) => {
-        if (err) console.error("❌ Erreur lors de la suppression :", err.message);
-        else console.log("🗑️ Table 'users' supprimée avec succès. Elle va être recréée proprement.");
-    });
+    // connection.query("DROP TABLE IF EXISTS devis", (err) => {
+    //     if (err) console.error("❌ Erreur lors de la suppression :", err.message);
+    //     else console.log("🗑️ Table 'users' supprimée avec succès. Elle va être recréée proprement.");
+    // });
 
     const sqlTable = `
     CREATE TABLE devis (
@@ -193,6 +193,57 @@ app.post('/api/verify', (req, res) => {
         }
     });
 });
+
+// pour renvoyer le code de verification
+
+app.post('/api/resend-code', (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ error: "L'adresse email est requise." });
+    }
+
+    // 1. Générer un nouveau code OTP (6 chiffres)
+    const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // 2. Mettre à jour l'OTP dans la base de données pour cet utilisateur
+    const sqlUpdate = "UPDATE users SET otp_code = ? WHERE email = ?";
+    
+    pool.query(sqlUpdate, [newOtp, email], (err, result) => {
+        if (err) {
+            console.error("Erreur SQL lors du renvoi :", err);
+            return res.status(500).json({ error: "Erreur lors de la mise à jour du code." });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "Aucun utilisateur trouvé avec cet email." });
+        }
+
+        // 3. Envoyer le nouveau code par email
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: '🔑 Nouveau code de vérification',
+            html: `
+                <div style="font-family: Arial, sans-serif; text-align: center;">
+                    <h2>Voici votre nouveau code</h2>
+                    <p style="font-size: 24px; font-weight: bold; color: #007bff; letter-spacing: 5px;">${newOtp}</p>
+                    <p>Ce code est valable pour votre demande actuelle.</p>
+                </div>
+            `
+        };
+
+        transporter.sendMail(mailOptions, (mailErr) => {
+            if (mailErr) {
+                console.error("Erreur d'envoi d'email :", mailErr);
+                return res.status(500).json({ error: "Impossible d'envoyer l'email." });
+            }
+
+            res.json({ success: true, message: "Nouveau code envoyé avec succès !" });
+        });
+    });
+});
+
 
 // --- 5. AUTH GOOGLE ---
 app.post('/api/auth/google', async (req, res) => {
