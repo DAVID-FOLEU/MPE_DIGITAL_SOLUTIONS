@@ -59,7 +59,7 @@ pool.getConnection((err, connection) => {
     // });
 
     const sqlTable = `
-    CREATE TABLE devis (
+    CREATE TABLE IF NOT EXISTS devis (
         id INT AUTO_INCREMENT PRIMARY KEY,
         reference_unique VARCHAR(50) UNIQUE NOT NULL,
         
@@ -134,10 +134,40 @@ app.post('/api/register', async (req, res) => {
             const greeting = (hour >= 4 && hour < 13) ? "Bonjour" : "Bonsoir";
 
             const mailOptions = {
-                from: process.env.EMAIL_USER,
+                from: `"Ma Plateforme" <${process.env.EMAIL_USER}>`, // Nom d'expéditeur personnalisé
                 to: email,
-                subject: 'Votre code de vérification',
-                text: `${greeting} ${firstname}, voici votre code de verification : ${vCode}`
+                subject: '🔑 Votre code de vérification',
+                html: `
+                    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #ffffff;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <h1 style="color: #333; font-size: 24px;">Vérification de compte</h1>
+                        </div>
+                        
+                        <p style="color: #555; font-size: 16px; line-height: 1.5;">
+                            ${greeting} <strong>${firstname}</strong>,
+                        </p>
+                        
+                        <p style="color: #555; font-size: 16px;">
+                            Merci de nous rejoindre ! Utilisez le code ci-dessous pour valider votre inscription :
+                        </p>
+                        
+                        <div style="text-align: center; margin: 30px 0;">
+                            <span style="display: inline-block; padding: 15px 30px; font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #ffffff; background: linear-gradient(135deg, #6e8efb, #a777e3); border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                                ${vCode}
+                            </span>
+                        </div>
+                        
+                        <p style="color: #888; font-size: 13px; text-align: center;">
+                            Ce code expirera bientôt. Si vous n'avez pas demandé ce code, ignorez cet email.
+                        </p>
+                        
+                        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+                        
+                        <p style="color: #aaa; font-size: 12px; text-align: center;">
+                            © 2026 Votre Entreprise. Tous droits réservés.
+                        </p>
+                    </div>
+                `
             };
 
             transporter.sendMail(mailOptions, (error) => {
